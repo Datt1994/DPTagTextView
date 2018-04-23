@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Orx-Ax-oIA">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Orx-Ax-oIA">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,12 +13,18 @@
         <!--View Controller-->
         <scene sceneID="QIb-gq-5hU">
             <objects>
-                <viewController id="Orx-Ax-oIA" customClass="ViewController" customModule="demoStringFormatter" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Orx-Ax-oIA" customClass="ViewController" customModule="TagNameDetection" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="zHk-zz-Hb0">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KX3-jg-JIh">
+                            <label hidden="YES" opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3hK-0V-zyf">
+                                <rect key="frame" x="20" y="70" width="335" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="KX3-jg-JIh">
                                 <rect key="frame" x="16" y="20" width="343" height="200"/>
                                 <color key="backgroundColor" red="1" green="0.61076081940000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -27,16 +33,33 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3Rf-BJ-RcG">
+                                <rect key="frame" x="16" y="220" width="343" height="447"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="Orx-Ax-oIA" id="eUp-pH-aN3"/>
+                                    <outlet property="delegate" destination="Orx-Ax-oIA" id="EIB-5z-VvR"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="75i-vh-ROk" firstAttribute="trailing" secondItem="3hK-0V-zyf" secondAttribute="trailing" constant="20" id="0iM-kC-2MZ"/>
+                            <constraint firstItem="3Rf-BJ-RcG" firstAttribute="leading" secondItem="75i-vh-ROk" secondAttribute="leading" constant="16" id="2i4-ZR-9q4"/>
                             <constraint firstItem="75i-vh-ROk" firstAttribute="trailing" secondItem="KX3-jg-JIh" secondAttribute="trailing" constant="16" id="R10-x1-puo"/>
+                            <constraint firstItem="75i-vh-ROk" firstAttribute="trailing" secondItem="3Rf-BJ-RcG" secondAttribute="trailing" constant="16" id="URV-uo-1yv"/>
+                            <constraint firstItem="3Rf-BJ-RcG" firstAttribute="top" secondItem="KX3-jg-JIh" secondAttribute="bottom" id="g73-YH-qYc"/>
+                            <constraint firstItem="75i-vh-ROk" firstAttribute="bottom" secondItem="3Rf-BJ-RcG" secondAttribute="bottom" id="qZw-kx-Tw6"/>
                             <constraint firstItem="KX3-jg-JIh" firstAttribute="leading" secondItem="75i-vh-ROk" secondAttribute="leading" constant="16" id="qr1-eR-cG2"/>
+                            <constraint firstItem="3hK-0V-zyf" firstAttribute="top" secondItem="75i-vh-ROk" secondAttribute="top" constant="50" id="ruf-CX-hbC"/>
                             <constraint firstItem="KX3-jg-JIh" firstAttribute="top" secondItem="75i-vh-ROk" secondAttribute="top" id="tDI-l5-TM7"/>
+                            <constraint firstItem="3hK-0V-zyf" firstAttribute="leading" secondItem="75i-vh-ROk" secondAttribute="leading" constant="20" id="z44-N9-Dwe"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="75i-vh-ROk"/>
                     </view>
                     <connections>
+                        <outlet property="lbl" destination="3hK-0V-zyf" id="Ftq-sx-z3a"/>
+                        <outlet property="tbl" destination="3Rf-BJ-RcG" id="HO4-54-ghg"/>
                         <outlet property="txtMain" destination="KX3-jg-JIh" id="ddS-k7-tsu"/>
                     </connections>
                 </viewController>
