@@ -56,13 +56,13 @@
 		C6A605E02074A59F005E5F45 /* TagNameDetection */ = {
 			isa = PBXGroup;
 			children = (
+				C6CDA76C20BD4E8100F91211 /* DPTagTextView.swift */,
 				C6A605E12074A59F005E5F45 /* AppDelegate.swift */,
 				C6A605E32074A59F005E5F45 /* ViewController.swift */,
 				C6A605E52074A59F005E5F45 /* Main.storyboard */,
 				C6A605E82074A59F005E5F45 /* Assets.xcassets */,
 				C6A605EA2074A59F005E5F45 /* LaunchScreen.storyboard */,
 				C6A605ED2074A59F005E5F45 /* Info.plist */,
-				C6CDA76C20BD4E8100F91211 /* DPTagTextView.swift */,
 			);
 			path = TagNameDetection;
 			sourceTree = "<group>";

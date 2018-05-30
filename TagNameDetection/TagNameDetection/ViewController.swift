@@ -32,20 +32,23 @@ class ViewController: UIViewController , UITextViewDelegate {
             let str =  "Hello, All the Information about @[---Datt Patel---] is related to @[---Dharmesh Shah---] and @[---Arpit Dhamane---] which can be Defined by @[---Nirzar Gandhi---] and @[---Pooja Shah---] who are in company with @[---Nilomi Shah---] , @[---Pradip Rathod---] and @[---Jiten Goswami---] "
             self.txtMain.setTagDetection(isTagDetection)
             arrTagedUser = arrUsers
-            self.txtMain.tagPrefix = tagPrefix
-            self.txtMain.tagPostfix = tagPostfix
+//            self.txtMain.tagPrefix = tagPrefix
+//            self.txtMain.tagPostfix = tagPostfix
 //            self.txtMain.arrTags = arrUsers
             _ = self.txtMain.getAllTag(str)
             self.txtMain.setTxt(str)
         }
         
-        txtMain.setDelegate()
+//        txtMain.setDelegateToTextView()
+        self.txtMain.delegate = self
         self.txtMain.dpTagDelegate = self
         tbl.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tbl.isHidden = true
         // Do any additional setup after loading the view, typically from a nib.
     }
-
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        return txtMain.dpTagTextView(textView, shouldChangeTextIn: range, replacementText: text)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -53,7 +56,6 @@ class ViewController: UIViewController , UITextViewDelegate {
 
     
     @IBAction func tagDetectionSwitchAction(_ sender: UISwitch) {
-
         txtMain.setTagDetection(sender.isOn)
     }
 }

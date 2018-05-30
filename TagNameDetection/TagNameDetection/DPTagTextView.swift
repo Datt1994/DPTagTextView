@@ -18,13 +18,21 @@ protocol DPTagTextViewDelegate {
 class DPTagTextView: UITextView , UITextViewDelegate {
 
     var arrRange : [Range<String.Index>] = []
-    var tagPrefix = "@["
-    var tagPostfix = "]"
     var arrTags : [String]!
     var tapGesture = UITapGestureRecognizer()
     var dpTagDelegate : DPTagTextViewDelegate!
+    var arrSearchWith = ["@","#"]
+    var txtFont : UIFont = UIFont(name: "HelveticaNeue", size: CGFloat(15))!
+    var tagFont : UIFont = UIFont(name: "HelveticaNeue-Bold", size: CGFloat(17.0))!
     
-    func setDelegate() {
+    @IBInspectable public var tagPrefix: String = "@["
+    @IBInspectable public var tagPostfix: String = "]"
+    @IBInspectable public var txtColor : UIColor = .black
+    @IBInspectable public var tagTxtColor : UIColor = .black
+    @IBInspectable public var tagBackgroundColor : UIColor = .clear
+    
+    
+    func setDelegateToTextView() {
         self.delegate = self
     }
     
@@ -55,62 +63,67 @@ class DPTagTextView: UITextView , UITextViewDelegate {
     func insertTag(_ strTag : String , strSearch : String) {
         var strTemp = text ?? ""
         var insertIndex = -1
-        if let range = strTemp.range(of: "@\(strSearch)") {
-            strTemp = strTemp.replacingOccurrences(of: "@\(strSearch)", with: "\(strTag) " , options: .literal, range: nil)
-            //                strTemp = "\(strTemp)\((arrUserListTag[indexPath.row].title)!) "
-            let r = range.lowerBound ..< "\(strTemp)\(strTemp)".utf16.index(range.lowerBound, offsetBy: (strTag.count))
-            
-            for i in 0 ..< arrRange.count {
-                if (arrRange[i].upperBound.encodedOffset > r.upperBound.encodedOffset && insertIndex == -1) {
-                    arrRange.insert(r, at: i)
-                    arrTags.insert(strTag, at: i)
-                    insertIndex = i
+        
+        for str in arrSearchWith {
+            if let range = strTemp.range(of: "\(str)\(strSearch)") {
+                strTemp = strTemp.replacingOccurrences(of: "\(str)\(strSearch)", with: "\(strTag) " , options: .literal, range: nil)
+                //                strTemp = "\(strTemp)\((arrUserListTag[indexPath.row].title)!) "
+                let r = range.lowerBound ..< "\(strTemp)\(strTemp)".utf16.index(range.lowerBound, offsetBy: (strTag.count))
+                
+                for i in 0 ..< arrRange.count {
+                    if (arrRange[i].upperBound.encodedOffset > r.upperBound.encodedOffset && insertIndex == -1) {
+                        arrRange.insert(r, at: i)
+                        arrTags.insert(strTag, at: i)
+                        insertIndex = i
+                    }
                 }
-            }
-            if (insertIndex == -1) {
-                arrRange.append(r)
-                arrTags.append(strTag)
-            } else {
-                for i in insertIndex+1 ..< arrRange.count {
-                    arrRange[i] = "\(strTemp)\(strTemp)".utf16.index(arrRange[i].lowerBound, offsetBy: strTag.count - "@\(strSearch)".count + 1) ..< "\(strTemp)\(strTemp)".utf16.index(arrRange[i].upperBound, offsetBy:strTag.count - "@\(strSearch)".count + 1)
+                if (insertIndex == -1) {
+                    arrRange.append(r)
+                    arrTags.append(strTag)
+                } else {
+                    for i in insertIndex+1 ..< arrRange.count {
+                        arrRange[i] = "\(strTemp)\(strTemp)".utf16.index(arrRange[i].lowerBound, offsetBy: strTag.count - "\(str)\(strSearch)".count + 1) ..< "\(strTemp)\(strTemp)".utf16.index(arrRange[i].upperBound, offsetBy:strTag.count - "\(str)\(strSearch)".count + 1)
+                    }
                 }
+                
+                for rag in arrRange.reversed() {
+                    strTemp.insert(contentsOf: tagPostfix, at: rag.upperBound)
+                    strTemp.insert(contentsOf: tagPrefix, at: rag.lowerBound)
+                    //                    strTemp.insert("@", at: rag.lowerBound)
+                }
+                //            print(strTemp)
+                
+                setTxt(strTemp)
+                
+                if (insertIndex != -1) {
+                    self.selectedRange = NSMakeRange(arrRange[insertIndex].upperBound.encodedOffset, 0)
+                    dpTagDelegate.insertTag(at: insertIndex, tagName: strTag)
+                } else {
+                    dpTagDelegate.insertTag(at: arrTags.count - 1, tagName: strTag)
+                }
+                break
             }
-            
-            for rag in arrRange.reversed() {
-                strTemp.insert(contentsOf: tagPostfix, at: rag.upperBound)
-                strTemp.insert(contentsOf: tagPrefix, at: rag.lowerBound)
-                //                    strTemp.insert("@", at: rag.lowerBound)
-            }
-//            print(strTemp)
         }
-        
-        setTxt(strTemp)
-        
-        if (insertIndex != -1) {
-            self.selectedRange = NSMakeRange(arrRange[insertIndex].upperBound.encodedOffset, 0)
-            dpTagDelegate.insertTag(at: insertIndex, tagName: strTag)
-        }
-
-        
     }
-    func setTxt(_ str:String , font : UIFont = UIFont(name: "HelveticaNeue", size: CGFloat(15))! , tagFont : UIFont = UIFont(name: "HelveticaNeue-Bold", size: CGFloat(17.0))!) {
+    func setTxt(_ str:String) {
         arrRange = [Range<String.Index>]()
         var strTemp = str
         for _ in arrTags {
-            let strTag = strTemp.slice(from: tagPrefix, to: tagPostfix)!
-            for range in strTemp.ranges(of: "\(tagPrefix)\(strTag)\(tagPostfix)") {
-                let rng = range.lowerBound ..< "\(strTemp)\(strTemp)".utf16.index(range.upperBound, offsetBy: -(tagPrefix.count + tagPostfix.count))
-                //                strTemp.replaceSubrange(rng, with: i)
-                strTemp = strTemp.replacingCharacters(in: range, with: strTag)
-                arrRange.append(rng)
-                break
+            if let strTag = strTemp.slice(from: tagPrefix, to: tagPostfix) {
+                for range in strTemp.ranges(of: "\(tagPrefix)\(strTag)\(tagPostfix)") {
+                    let rng = range.lowerBound ..< "\(strTemp)\(strTemp)".utf16.index(range.upperBound, offsetBy: -(tagPrefix.count + tagPostfix.count))
+                    //                strTemp.replaceSubrange(rng, with: i)
+                    strTemp = strTemp.replacingCharacters(in: range, with: strTag)
+                    arrRange.append(rng)
+                    break
+                }
             }
         }
         
         let formattedString = NSMutableAttributedString(string:strTemp)
-        formattedString.addAttribute(NSAttributedStringKey.font, value: font , range: NSRange(location:0,length:formattedString.length))
+        formattedString.addAttributes([NSAttributedStringKey.font: txtFont , NSAttributedStringKey.foregroundColor : txtColor ] , range: NSRange(location:0,length:formattedString.length))
         for range in arrRange {
-            formattedString.addAttribute(NSAttributedStringKey.font, value: tagFont , range: NSRange(location:range.lowerBound.encodedOffset,length:range.upperBound.encodedOffset-range.lowerBound.encodedOffset))
+            formattedString.addAttributes([NSAttributedStringKey.font : tagFont , NSAttributedStringKey.backgroundColor : tagBackgroundColor, NSAttributedStringKey.foregroundColor : tagTxtColor] , range: NSRange(location:range.lowerBound.encodedOffset,length:range.upperBound.encodedOffset-range.lowerBound.encodedOffset))
         }
         
         self.attributedText = formattedString
@@ -118,17 +131,16 @@ class DPTagTextView: UITextView , UITextViewDelegate {
         //        self.txtMain.text = strTemp
     }
     
-     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+    func dpTagTextView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         // for Search
-//        self.tbl.isHidden = true
+        //        self.tbl.isHidden = true
         let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
         
-        
-        if newText.contains("@") {
+        func search(with str : String) {
             //            if let range = newText.range(of: "@") {
             var rangSearch = newText.startIndex ..< newText.endIndex
             var isIN = false
-            for rang in newText.ranges(of: "@") {
+            for rang in newText.ranges(of: str) {
                 if (rang.lowerBound.encodedOffset < range.upperBound) {
                     func searchRang() {
                         if (text.utf16Count == 0) {
@@ -156,11 +168,11 @@ class DPTagTextView: UITextView , UITextViewDelegate {
                 }
             }
             if (isIN) {
-                var strSearch = String(newText[rangSearch])
-//                print(strSearch)
-                if strSearch.utf16Count > 0 {
+                let strSearch = String(newText[rangSearch])
+                //                print(strSearch)
+                if strSearch.utf16Count > 0 && !(text.utf16Count == 0 && strSearch.utf16Count == 1) {
                     dpTagDelegate.tagSearchString(strSearch)
-//                    self.tbl.isHidden = false
+                    //                    self.tbl.isHidden = false
                     //                    self.predicate(forPrefix: strSearch)
                     //                    return true
                 } else {
@@ -168,6 +180,12 @@ class DPTagTextView: UITextView , UITextViewDelegate {
                 }
             } else {
                 dpTagDelegate.tagSearchString("")
+            }
+        }
+        
+        for str in arrSearchWith {
+            if newText.contains(str) {
+                search(with:str)
             }
         }
         
@@ -179,7 +197,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
         var newString = NSString(string: textView.text!).replacingCharacters(in: range, with: text)
         var isFirst = false
         for i in 0 ..< arrRange.count {
-        
+            
             func detectTag() -> Bool {
                 if (arrRange[i].lowerBound.encodedOffset  <= range.location  && arrRange[i].upperBound.encodedOffset > range.location)  {
                     //                print("name:-\(arrUsers[i])")
@@ -259,6 +277,10 @@ class DPTagTextView: UITextView , UITextViewDelegate {
         selectedRange.length = 0
         textView.selectedRange = selectedRange
         return false
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+       return dpTagTextView(textView, shouldChangeTextIn: range, replacementText: text)
     }
     @objc private final func tapOnTextView(_ recognizer: UITapGestureRecognizer){
         // for Lable
@@ -353,9 +375,7 @@ extension String {
     }
 }
 extension String {
-    
     func slice(from: String, to: String) -> String? {
-        
         return (range(of: from)?.upperBound).flatMap { substringFrom in
             (range(of: to, range: substringFrom..<endIndex)?.lowerBound).map { substringTo in
                 String(self[substringFrom..<substringTo])
