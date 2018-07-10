@@ -145,7 +145,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
                     func searchRang() {
                         if (text.utf16Count == 0) {
                             let i = -range.length
-                            rangSearch = "\(newText)\(newText)".utf16.index(rang.upperBound, offsetBy:  i) ..< "\(newText)\(newText)".utf16.index(rang.lowerBound, offsetBy:  range.upperBound + i - rang.lowerBound.encodedOffset)
+                            rangSearch = /*"\(newText)\(newText)".utf16.index(rang.upperBound, offsetBy:  i + 1)*/rang.upperBound ..< "\(newText)\(newText)".utf16.index(rang.lowerBound, offsetBy:  range.upperBound + i - rang.lowerBound.encodedOffset)
                         } else {
                             let i = text.utf16Count
                             rangSearch = rang.upperBound ..< "\(newText)\(newText)".utf16.index(rang.lowerBound, offsetBy:  range.upperBound + i - rang.lowerBound.encodedOffset)
@@ -169,8 +169,8 @@ class DPTagTextView: UITextView , UITextViewDelegate {
             }
             if (isIN) {
                 let strSearch = String(newText[rangSearch])
-                //                print(strSearch)
-                if strSearch.utf16Count > 0 && !(text.utf16Count == 0 && strSearch.utf16Count == 1) {
+//                                print(strSearch)
+                if strSearch.utf16Count > 0 /*&& !(text.utf16Count == 0 && strSearch.utf16Count == 1)*/ {
                     dpTagDelegate.tagSearchString(strSearch)
                     //                    self.tbl.isHidden = false
                     //                    self.predicate(forPrefix: strSearch)
