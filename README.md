@@ -11,7 +11,7 @@ Copy & paste DPVideoMerger.swift file into your project
 ## How to use
 ![AddClass](https://user-images.githubusercontent.com/19645535/42803028-4d108e06-89c2-11e8-9b4a-8cbd92db385d.png)
 
-👆Add DPTagTextView to UITextView Class
+👆Add DPTagTextView to UITextView Custom Class.
 
 ![Properties](https://user-images.githubusercontent.com/19645535/42803080-775b94f8-89c2-11e8-9535-041adf802675.png)
 
