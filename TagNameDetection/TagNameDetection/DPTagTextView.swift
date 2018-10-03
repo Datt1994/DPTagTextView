@@ -194,7 +194,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
         var strTxtView = textView.text ?? ""
         var selectedRange = range
         var deletedRanges = [Int]()
-        var newString = NSString(string: textView.text!).replacingCharacters(in: range, with: text)
+        var newString = NSString(string: textView.text ?? "").replacingCharacters(in: range, with: text)
         var isFirst = false
         for i in 0 ..< arrRange.count {
             

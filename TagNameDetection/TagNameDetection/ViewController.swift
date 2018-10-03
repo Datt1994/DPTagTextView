@@ -23,6 +23,7 @@ class ViewController: UIViewController , UITextViewDelegate {
     var arrTagedUser : [String] = []
     let tagPrefix = "@[---"
     let tagPostfix = "---]"
+    var arrSearchUsers = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +32,10 @@ class ViewController: UIViewController , UITextViewDelegate {
            
             let str =  "Hello, All the Information about @[---Datt Patel---] is related to @[---Dharmesh Shah---] and @[---Arpit Dhamane---] which can be Defined by @[---Nirzar Gandhi---] and @[---Pooja Shah---] who are in company with @[---Nilomi Shah---] , @[---Pradip Rathod---] and @[---Jiten Goswami---] "
             self.txtMain.setTagDetection(isTagDetection)
+            self.txtMain.arrSearchWith = ["@","#"]
             arrTagedUser = arrUsers
+            self.txtMain.txtFont = UIFont(name: "HelveticaNeue", size: CGFloat(15))!
+            self.txtMain.tagFont = UIFont(name: "HelveticaNeue-Bold", size: CGFloat(17.0))!
 //            self.txtMain.tagPrefix = tagPrefix
 //            self.txtMain.tagPostfix = tagPostfix
 //            self.txtMain.arrTags = arrUsers
@@ -68,6 +72,10 @@ extension ViewController : DPTagTextViewDelegate {
         }
         print(str)
         strSearch = str
+        arrSearchUsers = arrUsers.filter({ (str) -> Bool in
+            return str.lowercased().contains(strSearch.lowercased())
+        })
+        tbl.reloadData()
     }
     
     func removeTag(at index: Int, tagName: String) {
@@ -86,18 +94,18 @@ extension ViewController : DPTagTextViewDelegate {
 }
 extension ViewController: UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arrUsers.count
+        return arrSearchUsers.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
         
-        cell.textLabel?.text = arrUsers[indexPath.row]
+        cell.textLabel?.text = arrSearchUsers[indexPath.row]
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        txtMain.insertTag(arrUsers[indexPath.row], strSearch: strSearch)
+        txtMain.insertTag(arrSearchUsers[indexPath.row], strSearch: strSearch)
         tbl.isHidden = true
         strSearch = ""
         

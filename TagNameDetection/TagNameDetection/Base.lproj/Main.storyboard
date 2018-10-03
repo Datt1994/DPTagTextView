@@ -24,7 +24,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="fisghj lfjkgkldfjgkljdfg" translatesAutoresizingMaskIntoConstraints="NO" id="KX3-jg-JIh" customClass="DPTagTextView" customModule="TagNameDetection" customModuleProvider="target">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="DPTagNameDetection" translatesAutoresizingMaskIntoConstraints="NO" id="KX3-jg-JIh" customClass="DPTagTextView" customModule="TagNameDetection" customModuleProvider="target">
                                 <rect key="frame" x="16" y="70" width="343" height="200"/>
                                 <color key="backgroundColor" red="0.84313725490000002" green="0.84313725490000002" blue="0.84313725490000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -103,7 +103,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xfc-Qu-NLP" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="117.59999999999999" y="118.29085457271366"/>
+            <point key="canvasLocation" x="453.60000000000002" y="-14.842578710644679"/>
         </scene>
     </scenes>
 </document>
