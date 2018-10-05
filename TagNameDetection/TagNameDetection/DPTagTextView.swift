@@ -141,7 +141,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
             var rangSearch = newText.startIndex ..< newText.endIndex
             var isIN = false
             for rang in newText.ranges(of: str) {
-                if (rang.lowerBound.encodedOffset < range.upperBound) {
+                if (rang.lowerBound.encodedOffset < range.lowerBound) {
                     func searchRang() {
                         if (text.utf16Count == 0) {
                             let i = -range.length
