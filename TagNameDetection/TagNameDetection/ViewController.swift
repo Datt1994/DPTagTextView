@@ -51,7 +51,7 @@ class ViewController: UIViewController , UITextViewDelegate {
         // Do any additional setup after loading the view, typically from a nib.
     }
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        return txtMain.dpTagTextView(textView, shouldChangeTextIn: range, replacementText: text)
+        return txtMain.textView(textView, shouldChangeTextIn: range, replacementText: text)
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -61,6 +61,14 @@ class ViewController: UIViewController , UITextViewDelegate {
     
     @IBAction func tagDetectionSwitchAction(_ sender: UISwitch) {
         txtMain.setTagDetection(sender.isOn)
+    }
+    @IBAction func btnClearAction(_ sender: UIButton) {
+        clearTagTextView()
+    }
+    
+    private func clearTagTextView() {
+        arrTagedUser.removeAll()
+        txtMain.clearTextWithTag()
     }
 }
 extension ViewController : DPTagTextViewDelegate {

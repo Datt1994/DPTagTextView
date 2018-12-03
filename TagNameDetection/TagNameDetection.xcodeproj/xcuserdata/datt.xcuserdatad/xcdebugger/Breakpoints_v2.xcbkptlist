@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TagNameDetection/ViewController.swift"
-            timestampString = "560434014.720094"
+            timestampString = "565512689.671471"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "84"
-            endingLineNumber = "84"
+            startingLineNumber = "92"
+            endingLineNumber = "92"
             landmarkName = "ViewController"
             landmarkType = "21">
          </BreakpointContent>
@@ -36,11 +36,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TagNameDetection/ViewController.swift"
-            timestampString = "560434014.720438"
+            timestampString = "565512689.671804"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
+            startingLineNumber = "88"
+            endingLineNumber = "88"
             landmarkName = "ViewController"
             landmarkType = "21">
          </BreakpointContent>
@@ -52,11 +52,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TagNameDetection/DPTagTextView.swift"
-            timestampString = "560434845.450013"
+            timestampString = "565512689.6720279"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "96"
-            endingLineNumber = "96"
+            startingLineNumber = "102"
+            endingLineNumber = "102"
             landmarkName = "insertTag(_:strSearch:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -68,11 +68,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TagNameDetection/DPTagTextView.swift"
-            timestampString = "560434845.450454"
+            timestampString = "565512689.672089"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "143"
-            endingLineNumber = "143"
+            startingLineNumber = "183"
+            endingLineNumber = "183"
             landmarkName = "search(with:)"
             landmarkType = "9">
          </BreakpointContent>
@@ -84,29 +84,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TagNameDetection/DPTagTextView.swift"
-            timestampString = "560434845.450804"
+            timestampString = "565512689.672145"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "171"
-            endingLineNumber = "171"
-            landmarkName = "search(with:)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "TagNameDetection/DPTagTextView.swift"
-            timestampString = "560434845.451153"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "162"
-            endingLineNumber = "162"
-            landmarkName = "search(with:)"
-            landmarkType = "9">
+            startingLineNumber = "298"
+            endingLineNumber = "298"
+            landmarkName = "textView(_:shouldChangeTextIn:replacementText:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

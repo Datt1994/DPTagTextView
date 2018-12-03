@@ -72,6 +72,13 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iZY-TC-VQK">
+                                <rect key="frame" x="319" y="240" width="36" height="30"/>
+                                <state key="normal" title="Clear"/>
+                                <connections>
+                                    <action selector="btnClearAction:" destination="Orx-Ax-oIA" eventType="touchUpInside" id="Gqw-aD-tyi"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -79,10 +86,13 @@
                             <constraint firstItem="Kf1-Nd-50K" firstAttribute="leading" secondItem="75i-vh-ROk" secondAttribute="leading" constant="20" id="2PV-GF-bQb"/>
                             <constraint firstItem="3Rf-BJ-RcG" firstAttribute="leading" secondItem="75i-vh-ROk" secondAttribute="leading" constant="16" id="2i4-ZR-9q4"/>
                             <constraint firstItem="dUA-zA-BAw" firstAttribute="centerY" secondItem="QAw-yv-NbB" secondAttribute="centerY" id="BKS-FQ-XRl"/>
+                            <constraint firstItem="75i-vh-ROk" firstAttribute="trailing" secondItem="iZY-TC-VQK" secondAttribute="trailing" constant="20" id="QXM-yo-FcM"/>
                             <constraint firstItem="75i-vh-ROk" firstAttribute="trailing" secondItem="KX3-jg-JIh" secondAttribute="trailing" constant="16" id="R10-x1-puo"/>
                             <constraint firstItem="75i-vh-ROk" firstAttribute="trailing" secondItem="3Rf-BJ-RcG" secondAttribute="trailing" constant="16" id="URV-uo-1yv"/>
                             <constraint firstItem="QAw-yv-NbB" firstAttribute="centerY" secondItem="Kf1-Nd-50K" secondAttribute="centerY" id="agX-pl-3Pd"/>
+                            <constraint firstItem="dUA-zA-BAw" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="zHk-zz-Hb0" secondAttribute="leading" constant="20" symbolic="YES" id="bvY-g1-Lv1"/>
                             <constraint firstItem="75i-vh-ROk" firstAttribute="trailing" secondItem="dUA-zA-BAw" secondAttribute="trailing" constant="20" id="dK5-aY-bkW"/>
+                            <constraint firstItem="3Rf-BJ-RcG" firstAttribute="top" secondItem="iZY-TC-VQK" secondAttribute="bottom" id="dKe-lK-KGj"/>
                             <constraint firstItem="3Rf-BJ-RcG" firstAttribute="top" secondItem="KX3-jg-JIh" secondAttribute="bottom" id="g73-YH-qYc"/>
                             <constraint firstItem="Kf1-Nd-50K" firstAttribute="top" secondItem="75i-vh-ROk" secondAttribute="top" constant="12" id="h3O-W6-r48"/>
                             <constraint firstItem="QAw-yv-NbB" firstAttribute="leading" secondItem="Kf1-Nd-50K" secondAttribute="trailing" constant="8" id="kGJ-XZ-8F0"/>
@@ -90,6 +100,7 @@
                             <constraint firstItem="KX3-jg-JIh" firstAttribute="leading" secondItem="75i-vh-ROk" secondAttribute="leading" constant="16" id="qr1-eR-cG2"/>
                             <constraint firstItem="3hK-0V-zyf" firstAttribute="top" secondItem="75i-vh-ROk" secondAttribute="top" constant="50" id="ruf-CX-hbC"/>
                             <constraint firstItem="KX3-jg-JIh" firstAttribute="top" secondItem="75i-vh-ROk" secondAttribute="top" constant="50" id="tDI-l5-TM7"/>
+                            <constraint firstItem="iZY-TC-VQK" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="zHk-zz-Hb0" secondAttribute="leading" constant="20" symbolic="YES" id="uuv-BH-7er"/>
                             <constraint firstItem="3hK-0V-zyf" firstAttribute="leading" secondItem="75i-vh-ROk" secondAttribute="leading" constant="20" id="z44-N9-Dwe"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="75i-vh-ROk"/>

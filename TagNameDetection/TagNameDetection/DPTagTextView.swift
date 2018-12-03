@@ -24,6 +24,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
     var arrSearchWith = ["@","#"]
     var txtFont : UIFont = UIFont(name: "HelveticaNeue", size: CGFloat(15))!
     var tagFont : UIFont = UIFont(name: "HelveticaNeue-Bold", size: CGFloat(17.0))!
+    private var hack_shouldIgnorePredictiveInput = false
     
     @IBInspectable public var tagPrefix: String = "@["
     @IBInspectable public var tagPostfix: String = "]"
@@ -47,6 +48,11 @@ class DPTagTextView: UITextView , UITextViewDelegate {
             let strTemp = str.replacingOccurrences(of: "\(tagPrefix)\(strTag)\(tagPostfix)", with: strTag)
             setAllTag(strTemp)
         }
+    }
+    func clearTextWithTag() {
+        self.text = ""
+        self.arrTags = []
+        self.arrRange = []
     }
     func setTagDetection(_ isTagDetection : Bool) {
         self.removeGestureRecognizer(tapGesture)
@@ -131,7 +137,12 @@ class DPTagTextView: UITextView , UITextViewDelegate {
         //        self.txtMain.text = strTemp
     }
     
-    func dpTagTextView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+    fileprivate func dpTagTextView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if hack_shouldIgnorePredictiveInput {
+            hack_shouldIgnorePredictiveInput = false
+            return false
+        }
+        hack_shouldIgnorePredictiveInput = true
         // for Search
         //        self.tbl.isHidden = true
         let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
@@ -143,13 +154,14 @@ class DPTagTextView: UITextView , UITextViewDelegate {
             for rang in newText.ranges(of: str) {
                 if (rang.lowerBound.encodedOffset < range.lowerBound) {
                     func searchRang() {
+                        var i = 0
                         if (text.utf16Count == 0) {
-                            let i = -range.length
-                            rangSearch = /*"\(newText)\(newText)".utf16.index(rang.upperBound, offsetBy:  i + 1)*/rang.upperBound ..< "\(newText)\(newText)".utf16.index(rang.lowerBound, offsetBy:  range.upperBound + i - rang.lowerBound.encodedOffset)
+                            i = -range.length
+//                            rangSearch = /*"\(newText)\(newText)".utf16.index(rang.upperBound, offsetBy:  i + 1)*/rang.upperBound ..< "\(newText)\(newText)".utf16.index(rang.lowerBound, offsetBy:  range.upperBound + i - rang.lowerBound.encodedOffset)
                         } else {
-                            let i = text.utf16Count
-                            rangSearch = rang.upperBound ..< "\(newText)\(newText)".utf16.index(rang.lowerBound, offsetBy:  range.upperBound + i - rang.lowerBound.encodedOffset)
+                             i = -range.length + 1
                         }
+                        rangSearch = rang.upperBound ..< "\(newText)\(newText)".utf16.index(rang.lowerBound, offsetBy:  range.upperBound + i - rang.lowerBound.encodedOffset)
                         isIN = true
                     }
                     if (arrRange.count > 0) {
@@ -175,12 +187,14 @@ class DPTagTextView: UITextView , UITextViewDelegate {
                     //                    self.tbl.isHidden = false
                     //                    self.predicate(forPrefix: strSearch)
                     //                    return true
-                } else {
-                    dpTagDelegate.tagSearchString("")
                 }
-            } else {
-                dpTagDelegate.tagSearchString("")
+//                else {
+//                    dpTagDelegate.tagSearchString("")
+//                }
             }
+//            else {
+//                dpTagDelegate.tagSearchString("")
+//            }
         }
         
         for str in arrSearchWith {
@@ -276,6 +290,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
         
         selectedRange.length = 0
         textView.selectedRange = selectedRange
+        hack_shouldIgnorePredictiveInput = false
         return false
     }
     
@@ -409,3 +424,4 @@ extension StringProtocol where Index == String.Index {
         return result
     }
 }
+
