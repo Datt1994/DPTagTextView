@@ -24,7 +24,6 @@ Copy & paste DPVideoMerger.swift file into your project
 **Set up**
 ```swift
 self.txtMain.dpTagDelegate = self // set DPTagTextViewDelegate Delegate 
-self.txtMain.setTxt("hello @[---Datt---]")
 self.txtMain.tagPrefix = "@[---" // or use Interface Builder
 self.txtMain.tagPostfix = "---]" // or use Interface Builder
 self.txtMain.setTagDetection(true) // true :- detecte tag on tap , false :- Search Tags using @,#,etc.
@@ -32,6 +31,13 @@ self.txtMain.arrSearchWith = ["@","#","$$"] // Search start with this strings.
 let arrTags = self.txtMain.getAllTag("hello @[---Datt---]") // get all tags from string.
 self.txtMain.txtFont = UIFont(name: "HelveticaNeue", size: CGFloat(15))! // set textview text font family 
 self.txtMain.tagFont = UIFont(name: "HelveticaNeue-Bold", size: CGFloat(17.0))! // set textview tag font family 
+
+var arrTags = [DPTag]()
+for i in 0 ..< arrTagedUser.count { // arrTagedUser = ["Datt"]
+    arrTags.append(DPTag(strTagName: arrTagedUser[i], tagID: i))
+}
+self.txtMain.setTxtAndTag(str: "hello @[---Datt---]", tags: arrTags)
+self.txtMain.setTxt("hello @[---Datt---]")
 ```
 
 **Delegate Methods**
