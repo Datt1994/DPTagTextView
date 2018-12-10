@@ -8,23 +8,37 @@
 
 import UIKit
 
+struct DPTag {
+    let strTagName : String
+    let tagID : Int
+    let data : [String:AnyObject]?
+    
+    init(strTagName: String , tagID: Int , data: [String:AnyObject] = [:]) {
+        self.strTagName = strTagName
+        self.tagID = tagID
+        self.data = data
+    }
+    
+}
+
 protocol DPTagTextViewDelegate {
     func tagSearchString(_ strSearch : String)
-    func removeTag(at index : Int , tagName : String)
-    func insertTag(at index : Int , tagName : String)
-    func detectTag(at index : Int , tagName : String)
+    func removeTag(at index : Int , tag : DPTag)
+    func insertTag(at index : Int , tag : DPTag)
+    func detectTag(at index : Int , tag : DPTag)
 }
 
 class DPTagTextView: UITextView , UITextViewDelegate {
 
-    var arrRange : [Range<String.Index>] = []
-    var arrTags : [String]!
-    var tapGesture = UITapGestureRecognizer()
+    private var arrRange : [Range<String.Index>] = []
+    private var arrTags : [DPTag] = [DPTag]()
+    private var tapGesture = UITapGestureRecognizer()
     var dpTagDelegate : DPTagTextViewDelegate!
     var arrSearchWith = ["@","#"]
     var txtFont : UIFont = UIFont(name: "HelveticaNeue", size: CGFloat(15))!
     var tagFont : UIFont = UIFont(name: "HelveticaNeue-Bold", size: CGFloat(17.0))!
     private var hack_shouldIgnorePredictiveInput = false
+    private var predictiveTextWatcher = 0
     
     @IBInspectable public var tagPrefix: String = "@["
     @IBInspectable public var tagPostfix: String = "]"
@@ -37,18 +51,24 @@ class DPTagTextView: UITextView , UITextViewDelegate {
         self.delegate = self
     }
     
-    func getAllTag(_ str:String) -> [String] {
-        arrTags = [String]()
+    func getAllTag(_ str:String) -> [DPTag] {
+        arrTags = [DPTag]()
         setAllTag(str)
         return arrTags
     }
     func setAllTag(_ str:String) {
         if let strTag = str.slice(from: tagPrefix, to: tagPostfix) {
-            arrTags.append(strTag)
+            arrTags.append(DPTag(strTagName: strTag, tagID: -1, data: [:]))
             let strTemp = str.replacingOccurrences(of: "\(tagPrefix)\(strTag)\(tagPostfix)", with: strTag)
             setAllTag(strTemp)
         }
     }
+    
+    func setTxtAndTag(str:String , tags:[DPTag]) {
+        arrTags = tags
+        setTxt(str)
+    }
+    
     func clearTextWithTag() {
         self.text = ""
         self.arrTags = []
@@ -66,7 +86,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
             self.isSelectable = true
         }
     }
-    func insertTag(_ strTag : String , strSearch : String) {
+    func insertTag(_ strTag : String , tagID : Int , tagData : [String:AnyObject] = [:] , strSearch : String) {
         var strTemp = text ?? ""
         var insertIndex = -1
         
@@ -79,13 +99,13 @@ class DPTagTextView: UITextView , UITextViewDelegate {
                 for i in 0 ..< arrRange.count {
                     if (arrRange[i].upperBound.encodedOffset > r.upperBound.encodedOffset && insertIndex == -1) {
                         arrRange.insert(r, at: i)
-                        arrTags.insert(strTag, at: i)
+                        arrTags.insert(DPTag(strTagName: strTag, tagID: tagID, data: tagData), at: i)
                         insertIndex = i
                     }
                 }
                 if (insertIndex == -1) {
                     arrRange.append(r)
-                    arrTags.append(strTag)
+                    arrTags.append(DPTag(strTagName: strTag, tagID: tagID, data: tagData))
                 } else {
                     for i in insertIndex+1 ..< arrRange.count {
                         arrRange[i] = "\(strTemp)\(strTemp)".utf16.index(arrRange[i].lowerBound, offsetBy: strTag.count - "\(str)\(strSearch)".count + 1) ..< "\(strTemp)\(strTemp)".utf16.index(arrRange[i].upperBound, offsetBy:strTag.count - "\(str)\(strSearch)".count + 1)
@@ -103,9 +123,9 @@ class DPTagTextView: UITextView , UITextViewDelegate {
                 
                 if (insertIndex != -1) {
                     self.selectedRange = NSMakeRange(arrRange[insertIndex].upperBound.encodedOffset, 0)
-                    dpTagDelegate.insertTag(at: insertIndex, tagName: strTag)
+                    dpTagDelegate.insertTag(at: insertIndex, tag: DPTag(strTagName: strTag, tagID: tagID, data: tagData))
                 } else {
-                    dpTagDelegate.insertTag(at: arrTags.count - 1, tagName: strTag)
+                    dpTagDelegate.insertTag(at: arrTags.count - 1, tag: DPTag(strTagName: strTag, tagID: tagID, data: tagData))
                 }
                 break
             }
@@ -138,7 +158,12 @@ class DPTagTextView: UITextView , UITextViewDelegate {
     }
     
     fileprivate func dpTagTextView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if predictiveTextWatcher == 1 {
+            predictiveTextWatcher = 0
+            return false
+        }
         if hack_shouldIgnorePredictiveInput {
+             predictiveTextWatcher += 1
             hack_shouldIgnorePredictiveInput = false
             return false
         }
@@ -159,7 +184,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
                             i = -range.length
 //                            rangSearch = /*"\(newText)\(newText)".utf16.index(rang.upperBound, offsetBy:  i + 1)*/rang.upperBound ..< "\(newText)\(newText)".utf16.index(rang.lowerBound, offsetBy:  range.upperBound + i - rang.lowerBound.encodedOffset)
                         } else {
-                             i = -range.length + 1
+                             i = -range.length + text.utf16Count
                         }
                         rangSearch = rang.upperBound ..< "\(newText)\(newText)".utf16.index(rang.lowerBound, offsetBy:  range.upperBound + i - rang.lowerBound.encodedOffset)
                         isIN = true
@@ -188,13 +213,13 @@ class DPTagTextView: UITextView , UITextViewDelegate {
                     //                    self.predicate(forPrefix: strSearch)
                     //                    return true
                 }
-//                else {
-//                    dpTagDelegate.tagSearchString("")
-//                }
+                else {
+                    dpTagDelegate.tagSearchString("")
+                }
             }
-//            else {
-//                dpTagDelegate.tagSearchString("")
-//            }
+            else {
+                dpTagDelegate.tagSearchString("")
+            }
         }
         
         for str in arrSearchWith {
@@ -213,7 +238,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
         for i in 0 ..< arrRange.count {
             
             func detectTag() -> Bool {
-                if (arrRange[i].lowerBound.encodedOffset  <= range.location  && arrRange[i].upperBound.encodedOffset > range.location)  {
+                if (arrRange[i].lowerBound.encodedOffset  < range.location  && arrRange[i].upperBound.encodedOffset > range.location)  {
                     //                print("name:-\(arrUsers[i])")
                     deletedRanges.append(i)
                     isFirst = true
@@ -249,7 +274,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
             
             if (deletedRanges.count == 1 && isFirst) {
                 let removedRange = arrRange[deletedRanges[0]]
-                dpTagDelegate.removeTag(at: deletedRanges[0], tagName: arrTags[deletedRanges[0]])
+                dpTagDelegate.removeTag(at: deletedRanges[0], tag: arrTags[deletedRanges[0]])
                 arrRange.remove(at: deletedRanges[0])
                 arrTags.remove(at: deletedRanges[0])
                 
@@ -265,7 +290,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
                 }
             } else {
                 for deletedRange in deletedRanges.reversed() {
-                    dpTagDelegate.removeTag(at: deletedRange, tagName: arrTags[deletedRange])
+                    dpTagDelegate.removeTag(at: deletedRange, tag: arrTags[deletedRange])
                     arrRange.remove(at: deletedRange)
                     arrTags.remove(at: deletedRange)
                 }
@@ -379,9 +404,16 @@ class DPTagTextView: UITextView , UITextViewDelegate {
         for i in 0 ..< arrRange.count {
             if arrRange[i].lowerBound.encodedOffset <= charIndex && arrRange[i].upperBound.encodedOffset > charIndex {
 //                print("name:-\(arrTags[i])")
-                dpTagDelegate.detectTag(at: i, tagName: arrTags[i])
+                dpTagDelegate.detectTag(at: i, tag: arrTags[i])
             }
         }
+    }
+    override func addGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) {
+        if (gestureRecognizer.isKind(of: UILongPressGestureRecognizer.self)) {
+            gestureRecognizer.isEnabled = false;
+        }
+        super.addGestureRecognizer(gestureRecognizer)
+        return
     }
 }
 extension String {

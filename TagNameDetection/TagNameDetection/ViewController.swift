@@ -39,8 +39,13 @@ class ViewController: UIViewController , UITextViewDelegate {
 //            self.txtMain.tagPrefix = tagPrefix
 //            self.txtMain.tagPostfix = tagPostfix
 //            self.txtMain.arrTags = arrUsers
-            _ = self.txtMain.getAllTag(str)
-            self.txtMain.setTxt(str)
+//            _ = self.txtMain.getAllTag(str)
+            var arrTags = [DPTag]()
+            for i in 0 ..< arrTagedUser.count {
+                arrTags.append(DPTag(strTagName: arrTagedUser[i], tagID: i))
+            }
+            self.txtMain.setTxtAndTag(str: str, tags: arrTags)
+//            self.txtMain.setTxt(str)
         }
         
 //        txtMain.setDelegateToTextView()
@@ -86,17 +91,17 @@ extension ViewController : DPTagTextViewDelegate {
         tbl.reloadData()
     }
     
-    func removeTag(at index: Int, tagName: String) {
+    func removeTag(at index: Int, tag: DPTag) {
         arrTagedUser.remove(at: index)
     }
     
-    func insertTag(at index: Int, tagName: String) {
-        arrTagedUser.insert(tagName, at: index)
+    func insertTag(at index: Int, tag: DPTag) {
+        arrTagedUser.insert(tag.strTagName, at: index)
     }
     
-    func detectTag(at index: Int, tagName: String) {
-        print(tagName)
-        lblTagName.text = tagName
+    func detectTag(at index: Int, tag: DPTag) {
+        print(tag)
+        lblTagName.text = tag.strTagName
     }
     
 }
@@ -112,8 +117,7 @@ extension ViewController: UITableViewDelegate,UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        txtMain.insertTag(arrSearchUsers[indexPath.row], strSearch: strSearch)
+        txtMain.insertTag(arrSearchUsers[indexPath.row], tagID: Int(Date().timeIntervalSince1970), strSearch: strSearch)
         tbl.isHidden = true
         strSearch = ""
         
