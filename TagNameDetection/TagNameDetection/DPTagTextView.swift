@@ -306,15 +306,17 @@ class DPTagTextView: UITextView , UITextViewDelegate {
             newString.insert(contentsOf: tagPostfix, at: rag.upperBound)
             newString.insert(contentsOf: tagPrefix, at: rag.lowerBound)
         }
-        setTxt(newString)
-        
-        
+
         if (text.utf16Count != 0 ) {
             selectedRange.location += text.utf16Count
         }
         
         selectedRange.length = 0
+        self.isScrollEnabled = false;
+        setTxt(newString)
+        self.isScrollEnabled = true;
         textView.selectedRange = selectedRange
+        
         hack_shouldIgnorePredictiveInput = false
         return false
     }
