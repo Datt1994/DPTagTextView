@@ -147,9 +147,9 @@ class DPTagTextView: UITextView , UITextViewDelegate {
         }
         
         let formattedString = NSMutableAttributedString(string:strTemp)
-        formattedString.addAttributes([NSAttributedStringKey.font: txtFont , NSAttributedStringKey.foregroundColor : txtColor ] , range: NSRange(location:0,length:formattedString.length))
+        formattedString.addAttributes([NSAttributedString.Key.font: txtFont , NSAttributedString.Key.foregroundColor : txtColor ] , range: NSRange(location:0,length:formattedString.length))
         for range in arrRange {
-            formattedString.addAttributes([NSAttributedStringKey.font : tagFont , NSAttributedStringKey.backgroundColor : tagBackgroundColor, NSAttributedStringKey.foregroundColor : tagTxtColor] , range: NSRange(location:range.lowerBound.encodedOffset,length:range.upperBound.encodedOffset-range.lowerBound.encodedOffset))
+            formattedString.addAttributes([NSAttributedString.Key.font : tagFont , NSAttributedString.Key.backgroundColor : tagBackgroundColor, NSAttributedString.Key.foregroundColor : tagTxtColor] , range: NSRange(location:range.lowerBound.encodedOffset,length:range.upperBound.encodedOffset-range.lowerBound.encodedOffset))
         }
         
         self.attributedText = formattedString
