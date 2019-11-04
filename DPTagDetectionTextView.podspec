@@ -79,7 +79,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/Datt1994/DPTagDetectionTextView.git", :tag => s.version  ,:commit => "bdcf67322ad2b9320e59defe043ffa0f6383aac0" }
+  s.source       = { :git => "https://github.com/Datt1994/DPTagDetectionTextView.git", :tag => s.version  ,:commit => "b357b5e5690ae61df08039993390164f73524ea3" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
