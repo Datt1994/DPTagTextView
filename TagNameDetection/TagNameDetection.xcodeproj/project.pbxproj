@@ -37,6 +37,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C65F46D7237030D100B8062F /* DPTagTextView */ = {
+			isa = PBXGroup;
+			children = (
+				C6CDA76C20BD4E8100F91211 /* DPTagTextView.swift */,
+			);
+			path = DPTagTextView;
+			sourceTree = "<group>";
+		};
 		C6A605D52074A59F005E5F45 = {
 			isa = PBXGroup;
 			children = (
@@ -56,7 +64,7 @@
 		C6A605E02074A59F005E5F45 /* TagNameDetection */ = {
 			isa = PBXGroup;
 			children = (
-				C6CDA76C20BD4E8100F91211 /* DPTagTextView.swift */,
+				C65F46D7237030D100B8062F /* DPTagTextView */,
 				C6A605E12074A59F005E5F45 /* AppDelegate.swift */,
 				C6A605E32074A59F005E5F45 /* ViewController.swift */,
 				C6A605E52074A59F005E5F45 /* Main.storyboard */,
@@ -285,11 +293,12 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = TagNameDetection/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Datt.TagNameDetection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -301,11 +310,12 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = TagNameDetection/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Datt.TagNameDetection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

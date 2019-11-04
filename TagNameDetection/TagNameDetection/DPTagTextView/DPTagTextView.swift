@@ -97,7 +97,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
                 let r = range.lowerBound ..< "\(strTemp)\(strTemp)".utf16.index(range.lowerBound, offsetBy: (strTag.count))
                 
                 for i in 0 ..< arrRange.count {
-                    if (arrRange[i].upperBound.encodedOffset > r.upperBound.encodedOffset && insertIndex == -1) {
+                    if (arrRange[i].upperBound.utf16Offset(in: strTemp) > r.upperBound.utf16Offset(in: strTemp) && insertIndex == -1) {
                         arrRange.insert(r, at: i)
                         arrTags.insert(DPTag(strTagName: strTag, tagID: tagID, data: tagData), at: i)
                         insertIndex = i
@@ -122,7 +122,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
                 setTxt(strTemp)
                 
                 if (insertIndex != -1) {
-                    self.selectedRange = NSMakeRange(arrRange[insertIndex].upperBound.encodedOffset, 0)
+                    self.selectedRange = NSMakeRange(arrRange[insertIndex].upperBound.utf16Offset(in: strTemp), 0)
                     dpTagDelegate.insertTag(at: insertIndex, tag: DPTag(strTagName: strTag, tagID: tagID, data: tagData))
                 } else {
                     dpTagDelegate.insertTag(at: arrTags.count - 1, tag: DPTag(strTagName: strTag, tagID: tagID, data: tagData))
@@ -149,7 +149,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
         let formattedString = NSMutableAttributedString(string:strTemp)
         formattedString.addAttributes([NSAttributedString.Key.font: txtFont , NSAttributedString.Key.foregroundColor : txtColor ] , range: NSRange(location:0,length:formattedString.length))
         for range in arrRange {
-            formattedString.addAttributes([NSAttributedString.Key.font : tagFont , NSAttributedString.Key.backgroundColor : tagBackgroundColor, NSAttributedString.Key.foregroundColor : tagTxtColor] , range: NSRange(location:range.lowerBound.encodedOffset,length:range.upperBound.encodedOffset-range.lowerBound.encodedOffset))
+            formattedString.addAttributes([NSAttributedString.Key.font : tagFont , NSAttributedString.Key.backgroundColor : tagBackgroundColor, NSAttributedString.Key.foregroundColor : tagTxtColor] , range: NSRange(location:range.lowerBound.utf16Offset(in: strTemp),length:range.upperBound.utf16Offset(in: strTemp)-range.lowerBound.utf16Offset(in: strTemp)))
         }
         
         self.attributedText = formattedString
@@ -177,7 +177,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
             var rangSearch = newText.startIndex ..< newText.endIndex
             var isIN = false
             for rang in newText.ranges(of: str) {
-                if (rang.lowerBound.encodedOffset < range.lowerBound) {
+                if (rang.lowerBound.utf16Offset(in: newText) < range.lowerBound) {
                     func searchRang() {
                         var i = 0
                         if (text.utf16Count == 0) {
@@ -186,13 +186,13 @@ class DPTagTextView: UITextView , UITextViewDelegate {
                         } else {
                              i = -range.length + text.utf16Count
                         }
-                        rangSearch = rang.upperBound ..< "\(newText)\(newText)".utf16.index(rang.lowerBound, offsetBy:  range.upperBound + i - rang.lowerBound.encodedOffset)
+                        rangSearch = rang.upperBound ..< "\(newText)\(newText)".utf16.index(rang.lowerBound, offsetBy:  range.upperBound + i - rang.lowerBound.utf16Offset(in: newText))
                         isIN = true
                     }
                     if (arrRange.count > 0) {
                         var isGo = true
                         for r in arrRange {
-                            if (range.upperBound > r.upperBound.encodedOffset && rang.upperBound.encodedOffset < r.upperBound.encodedOffset) {
+                            if (range.upperBound > r.upperBound.utf16Offset(in: newText) && rang.upperBound.utf16Offset(in: newText) < r.upperBound.utf16Offset(in: newText)) {
                                 isGo = false
                             }
                         }
@@ -238,7 +238,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
         for i in 0 ..< arrRange.count {
             
             func detectTag() -> Bool {
-                if (arrRange[i].lowerBound.encodedOffset  < range.location  && arrRange[i].upperBound.encodedOffset > range.location)  {
+                if (arrRange[i].lowerBound.utf16Offset(in: strTxtView)  < range.location  && arrRange[i].upperBound.utf16Offset(in: strTxtView) > range.location)  {
                     //                print("name:-\(arrUsers[i])")
                     deletedRanges.append(i)
                     isFirst = true
@@ -246,7 +246,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
                 }
                 return false
             }
-            if ((range.location < arrRange[i].lowerBound.encodedOffset || range.location < arrRange[i].upperBound.encodedOffset) && (range.location + range.length > arrRange[i].lowerBound.encodedOffset || range.location + range.length > arrRange[i].upperBound.encodedOffset)) {
+            if ((range.location < arrRange[i].lowerBound.utf16Offset(in: strTxtView) || range.location < arrRange[i].upperBound.utf16Offset(in: strTxtView)) && (range.location + range.length > arrRange[i].lowerBound.utf16Offset(in: strTxtView) || range.location + range.length > arrRange[i].upperBound.utf16Offset(in: strTxtView))) {
                 if (!detectTag()) {
                     deletedRanges.append(i)
                     isFirst = false
@@ -258,12 +258,12 @@ class DPTagTextView: UITextView , UITextViewDelegate {
             if (text.utf16Count != 0) {
                 
                 //                for j in i ..< arrRange.count {
-                if (arrRange[i].lowerBound.encodedOffset >= range.location +  range.length) {
+                if (arrRange[i].lowerBound.utf16Offset(in: strTxtView) >= range.location +  range.length) {
                     arrRange[i] = "\(newString)\(newString)".utf16.index(arrRange[i].lowerBound, offsetBy: text.utf16Count - range.length) ..< "\(newString)\(newString)".utf16.index(arrRange[i].upperBound, offsetBy:text.utf16Count - range.length)
                 }
                 //                }
             } else {
-                if (arrRange[i].lowerBound.encodedOffset >= range.location && deletedRanges.count == 0) {
+                if (arrRange[i].lowerBound.utf16Offset(in: strTxtView) >= range.location && deletedRanges.count == 0) {
                     
                     arrRange[i] = "\(strTxtView)\(strTxtView)".utf16.index(arrRange[i].lowerBound, offsetBy: -(range.length)) ..< "\(strTxtView)\(strTxtView)".utf16.index(arrRange[i].upperBound, offsetBy:-(range.length))
                 }
@@ -280,12 +280,12 @@ class DPTagTextView: UITextView , UITextViewDelegate {
                 
                 if (deletedRanges[0] < arrRange.count && text.utf16Count == 0) {
                     for i in deletedRanges[0] ..< arrRange.count {
-                        arrRange[i] = "\(strTxtView)\(strTxtView)".utf16.index(arrRange[i].lowerBound, offsetBy: (removedRange.lowerBound.encodedOffset - removedRange.upperBound.encodedOffset)) ..< "\(strTxtView)\(strTxtView)".utf16.index(arrRange[i].upperBound, offsetBy:(removedRange.lowerBound.encodedOffset - removedRange.upperBound.encodedOffset))
+                        arrRange[i] = "\(strTxtView)\(strTxtView)".utf16.index(arrRange[i].lowerBound, offsetBy: (removedRange.lowerBound.utf16Offset(in: strTxtView) - removedRange.upperBound.utf16Offset(in: strTxtView))) ..< "\(strTxtView)\(strTxtView)".utf16.index(arrRange[i].upperBound, offsetBy:(removedRange.lowerBound.utf16Offset(in: strTxtView) - removedRange.upperBound.utf16Offset(in: strTxtView)))
                     }
                 }
                 if (text.utf16Count == 0){
                     strTxtView.removeSubrange(removedRange)
-                    selectedRange.location = removedRange.lowerBound.encodedOffset
+                    selectedRange.location = removedRange.lowerBound.utf16Offset(in: strTxtView)
                     newString = strTxtView
                 }
             } else {
@@ -404,7 +404,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
 //        print("index:-\(charIndex)")
         
         for i in 0 ..< arrRange.count {
-            if arrRange[i].lowerBound.encodedOffset <= charIndex && arrRange[i].upperBound.encodedOffset > charIndex {
+            if arrRange[i].lowerBound.utf16Offset(in: self.text) <= charIndex && arrRange[i].upperBound.utf16Offset(in: self.text) > charIndex {
 //                print("name:-\(arrTags[i])")
                 dpTagDelegate.detectTag(at: i, tag: arrTags[i])
             }
