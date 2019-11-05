@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "DPTagDetectionTextView"
-  s.version      = "1.5.2"
+  s.version      = "1.5.4"
   s.summary      = "Tag detection and tag search for Textview."
 
   # This description is used to generate tags and improve search results.

@@ -80,13 +80,15 @@ class DPTagTextView: UITextView , UITextViewDelegate {
         self.arrTags = []
         self.arrRange = []
     }
-    func setTagDetection(_ isTagDetection : Bool) {
+    func setTagDetection(_ isTagDetection : Bool, isEditable : Bool = false, isSelectable : Bool = false) {
         self.removeGestureRecognizer(tapGesture)
         if isTagDetection {
             tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapOnTextView(_:)))
+//            tapGesture.requiresExclusiveTouchType = false
+            tapGesture.delegate = self
             self.addGestureRecognizer(tapGesture)
-            self.isEditable = false
-            self.isSelectable = false
+            self.isEditable = isEditable
+            self.isSelectable = isSelectable
         } else {
             self.isEditable = true
             self.isSelectable = true
@@ -423,6 +425,13 @@ class DPTagTextView: UITextView , UITextViewDelegate {
         }
         super.addGestureRecognizer(gestureRecognizer)
         return
+    }
+    
+}
+extension DPTagTextView : UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+
+        return true
     }
 }
 extension String {
