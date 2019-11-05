@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "DPTagDetectionTextView"
-  s.version      = "1.5.1"
+  s.version      = "1.5.2"
   s.summary      = "Tag detection and tag search for Textview."
 
   # This description is used to generate tags and improve search results.
@@ -71,7 +71,7 @@ Pod::Spec.new do |s|
   # s.osx.deployment_target = "10.7"
   # s.watchos.deployment_target = "2.0"
   # s.tvos.deployment_target = "9.0"
-  s.platform     = :ios, "9.0"
+  s.platform     = :ios, "10.0"
   s.swift_version = '5.0'
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
@@ -79,7 +79,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/Datt1994/DPTagDetectionTextView.git", :tag => s.version  ,:commit => "b357b5e5690ae61df08039993390164f73524ea3" }
+  s.source       = { :git => "https://github.com/Datt1994/DPTagDetectionTextView.git", :tag => s.version }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
