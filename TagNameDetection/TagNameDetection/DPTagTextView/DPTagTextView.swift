@@ -46,21 +46,27 @@ class DPTagTextView: UITextView , UITextViewDelegate {
     @IBInspectable public var tagTxtColor : UIColor = .black
     @IBInspectable public var tagBackgroundColor : UIColor = .clear
     
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        if #available(iOS 11.0, *) {
+            self.textDragInteraction?.isEnabled = false
+        }
+    }
     
     func setDelegateToTextView() {
         self.delegate = self
     }
     
     func getAllTag(_ str:String) -> [DPTag] {
-        arrTags = [DPTag]()
-        setAllTag(str)
+        var arrTags = [DPTag]()
+        setAllTag(str,arrTags : &arrTags)
         return arrTags
     }
-    func setAllTag(_ str:String) {
+    fileprivate func setAllTag(_ str:String , arrTags : inout [DPTag]) {
         if let strTag = str.slice(from: tagPrefix, to: tagPostfix) {
             arrTags.append(DPTag(strTagName: strTag, tagID: -1, data: [:]))
             let strTemp = str.replacingOccurrences(of: "\(tagPrefix)\(strTag)\(tagPostfix)", with: strTag)
-            setAllTag(strTemp)
+            setAllTag(strTemp,arrTags : &arrTags)
         }
     }
     

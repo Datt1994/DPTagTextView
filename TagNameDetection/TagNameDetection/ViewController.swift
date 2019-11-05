@@ -38,7 +38,6 @@ class ViewController: UIViewController , UITextViewDelegate {
             self.txtMain.tagFont = UIFont(name: "HelveticaNeue-Bold", size: CGFloat(17.0))!
 //            self.txtMain.tagPrefix = tagPrefix
 //            self.txtMain.tagPostfix = tagPostfix
-//            self.txtMain.arrTags = arrUsers
 //            _ = self.txtMain.getAllTag(str)
             var arrTags = [DPTag]()
             for i in 0 ..< arrTagedUser.count {
@@ -76,6 +75,7 @@ class ViewController: UIViewController , UITextViewDelegate {
         txtMain.clearTextWithTag()
     }
 }
+// MARK:- DPTagTextViewDelegate
 extension ViewController : DPTagTextViewDelegate {
     func tagSearchString(_ str: String) {
         if (str.count == 0) {
@@ -105,6 +105,7 @@ extension ViewController : DPTagTextViewDelegate {
     }
     
 }
+// MARK:- UITableViewDelegate & UITableViewDataSource
 extension ViewController: UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return arrSearchUsers.count
