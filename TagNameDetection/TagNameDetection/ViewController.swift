@@ -9,7 +9,7 @@
 import UIKit
 
 
-class ViewController: UIViewController , UITextViewDelegate {
+class ViewController: UIViewController {
     @IBOutlet weak var txtMain: DPTagTextView!
     @IBOutlet weak var tbl: UITableView!
     @IBOutlet weak var lbl: UILabel!
@@ -47,16 +47,14 @@ class ViewController: UIViewController , UITextViewDelegate {
 //            self.txtMain.setTxt(str)
         }
         
-//        txtMain.setDelegateToTextView()
-        self.txtMain.delegate = self
+//        txtMain.setDelegateToTextView() // If you don't want to use delegate in your class
+        self.txtMain.delegate = self // If you want to use delegate in your class, Then retrun txtMain.textView(textView, shouldChangeTextIn: range, replacementText: text) in shouldChangeTextIn delegate method.
         self.txtMain.dpTagDelegate = self
         tbl.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tbl.isHidden = true
         // Do any additional setup after loading the view, typically from a nib.
     }
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        return txtMain.textView(textView, shouldChangeTextIn: range, replacementText: text)
-    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -73,6 +71,12 @@ class ViewController: UIViewController , UITextViewDelegate {
     private func clearTagTextView() {
         arrTagedUser.removeAll()
         txtMain.clearTextWithTag()
+    }
+}
+// MARK:- DPTagTextViewDelegate
+extension ViewController : UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        return txtMain.textView(textView, shouldChangeTextIn: range, replacementText: text) // Required for functionality to work.
     }
 }
 // MARK:- DPTagTextViewDelegate

@@ -140,6 +140,7 @@ class DPTagTextView: UITextView , UITextViewDelegate {
     func setTxt(_ str:String) {
         arrRange = [Range<String.Index>]()
         var strTemp = str
+        if arrTags.count == 0 { arrTags = getAllTag(str) }
         for _ in arrTags {
             if let strTag = strTemp.slice(from: tagPrefix, to: tagPostfix) {
                 for range in strTemp.ranges(of: "\(tagPrefix)\(strTag)\(tagPostfix)") {
