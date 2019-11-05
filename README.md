@@ -73,13 +73,13 @@ extension ViewController : DPTagTextViewDelegate {
     func tagSearchString(_ str: String) {
     }
     
-    func removeTag(at index: Int, tagName: String) {
+    func removeTag(at index: Int, tag: DPTag) {
     }
     
-    func insertTag(at index: Int, tagName: String) {
+    func insertTag(at index: Int, tag: DPTag) {
     }
     
-    func detectTag(at index: Int, tagName: String) {
+    func detectTag(at index: Int, tag: DPTag) {
     }
 }
 ```
