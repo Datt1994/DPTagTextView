@@ -73,7 +73,7 @@ class ViewController: UIViewController {
         txtMain.clearTextWithTag()
     }
 }
-// MARK:- DPTagTextViewDelegate
+// MARK:- UITextViewDelegate
 extension ViewController : UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         return txtMain.textView(textView, shouldChangeTextIn: range, replacementText: text) // Required for functionality to work.
