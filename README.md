@@ -70,7 +70,7 @@ tagTextView.setText("There are many variations of passages of Lorem Ipsum availa
 tagTextView.setText(nil, arrTags: [])
 
 //Add tag replacing serached string
-//tagTextView.addTag(allText: <#T##String?#>, tagText: <#T##String#>, id: <#T##String#>, data: <#T##[String : Any]#>, customTextAttributes: <#T##[NSAttributedString.Key : Any]?#>, isAppendSpace: <#T##Bool#>)
+//tagTextView.addTag(allText: String?, tagText: String, id: String, data: [String : Any], customTextAttributes: [NSAttributedString.Key : Any], isAppendSpace: Bool)
 tagTextView.addTag(tagText: "User Name")
 ```
 
