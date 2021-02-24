@@ -4,7 +4,7 @@ Tag detection from Textview.
 
 ## Installation with CocoaPods
 
-[CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C. You can install it with the following command:
+[CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C & Swift. You can install it with the following command:
 
 ```bash
 $ gem install cocoapods
@@ -40,46 +40,56 @@ $ pod install
 
 👆Add DPTagTextView to UITextView Custom Class.
 
-![Properties](https://user-images.githubusercontent.com/19645535/42803080-775b94f8-89c2-11e8-9535-041adf802675.png)
-
-👆Use this properties as per your requirments.
-
-
 
 ## Code
 
 **Set up**
 ```swift
-self.txtMain.dpTagDelegate = self // set DPTagTextViewDelegate Delegate 
-self.txtMain.tagPrefix = "@[---" // or use Interface Builder
-self.txtMain.tagPostfix = "---]" // or use Interface Builder
-self.txtMain.setTagDetection(true) // true :- detecte tag on tap , false :- Search Tags using @,#,etc.
-self.txtMain.arrSearchWith = ["@","#","$$"] // Search start with this strings.
-let arrTags = self.txtMain.getAllTag("hello @[---Datt---]") // get all tags from string.
-self.txtMain.txtFont = UIFont(name: "HelveticaNeue", size: CGFloat(15))! // set textview text font family 
-self.txtMain.tagFont = UIFont(name: "HelveticaNeue-Bold", size: CGFloat(17.0))! // set textview tag font family 
+tagTextView.dpTagDelegate = self // set DPTagTextViewDelegate Delegate 
+tagTextView.setTagDetection(true) // true :- detecte tag on tap , false :- Search Tags using mentionSymbol & hashTagSymbol.
+tagTextView.mentionSymbol = "@" // Search start with this mentionSymbol.
+tagTextView.hashTagSymbol = "#" // Search start with this hashTagSymbol for hashtagging.
+tagTextView.allowsHashTagUsingSpace = true // Add HashTag using space
+tagTextView.textViewAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black,
+NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)] // set textview defult text Attributes
+tagTextView.mentionTagTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.blue,
+NSAttributedString.Key.backgroundColor: UIColor.lightGray,
+NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)] // set textview mentionTag text Attributes
+tagTextView.hashTagTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.red,
+NSAttributedString.Key.backgroundColor: UIColor.lightGray,
+NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)] // set textview hashTag text Attributes
 
-var arrTags = [DPTag]()
-for i in 0 ..< arrTagedUser.count { // arrTagedUser = ["Datt"]
-    arrTags.append(DPTag(strTagName: arrTagedUser[i], tagID: i))
-}
-self.txtMain.setTxtAndTag(str: "hello @[---Datt---]", tags: arrTags)
-self.txtMain.setTxt("hello @[---Datt---]")
+//Set pre text and tags 
+let tag1 = DPTag(name: "Lorem Ipsum", range: NSRange(location: 41, length: 11))
+let tag2 = DPTag(id: "567681647", name: "suffered", range: NSRange(location: 86, length: 9), data: ["withHashTag" : "#suffered"], isHashTag: true,customTextAttributes: [NSAttributedString.Key.foregroundColor: UIColor.green,NSAttributedString.Key.backgroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)])
+let tag3 = DPTag(name: "humour", range: NSRange(location: 133, length: 7), isHashTag: true)
+
+tagTextView.setText("There are many variations of passages of Lorem Ipsum available, but the majority have #suffered alteration in some form, by injected #humour, or randomised words which don't look even slightly believable.", arrTags: [tag1, tag2, tag3])
+
+//Clear textview 
+tagTextView.setText(nil, arrTags: [])
+
+//Add tag replacing serached string
+//tagTextView.addTag(allText: <#T##String?#>, tagText: <#T##String#>, id: <#T##String#>, data: <#T##[String : Any]#>, customTextAttributes: <#T##[NSAttributedString.Key : Any]?#>, isAppendSpace: <#T##Bool#>)
+tagTextView.addTag(tagText: "User Name")
 ```
 
 **Delegate Methods**
 ```swift
 extension ViewController : DPTagTextViewDelegate {
-    func tagSearchString(_ str: String) {
+    func dpTagTextView(_ textView: DPTagTextView, didChangedTagSearchString strSearch: String, isHashTag: Bool) {
     }
     
-    func removeTag(at index: Int, tag: DPTag) {
+    func dpTagTextView(_ textView: DPTagTextView, didInsertTag tag: DPTag) {
     }
     
-    func insertTag(at index: Int, tag: DPTag) {
+    func dpTagTextView(_ textView: DPTagTextView, didRemoveTag tag: DPTag) {
     }
     
-    func detectTag(at index: Int, tag: DPTag) {
+    func dpTagTextView(_ textView: DPTagTextView, didSelectTag tag: DPTag) {
+    }
+    
+    func dpTagTextView(_ textView: DPTagTextView, didChangedTags arrTags: [DPTag]) {
     }
 }
 ```
