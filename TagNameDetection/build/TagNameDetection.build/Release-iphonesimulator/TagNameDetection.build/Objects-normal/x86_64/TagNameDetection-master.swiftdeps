@@ -1,7 +1,0 @@
-version: "Apple Swift version 4.1 (swiftlang-902.0.48 clang-902.0.37.1)"
-options: "6fb50d4081f497240fb2a41d74007356"
-build_time: [1545996474, 287323000]
-inputs:
-  "/Users/datt/Documents/TagNameDetection/TagNameDetection/TagNameDetection/ViewController.swift": [9223372036, 854775807]
-  "/Users/datt/Documents/TagNameDetection/TagNameDetection/TagNameDetection/DPTagTextView.swift": [9223372036, 854775807]
-  "/Users/datt/Documents/TagNameDetection/TagNameDetection/TagNameDetection/AppDelegate.swift": [9223372036, 854775807]

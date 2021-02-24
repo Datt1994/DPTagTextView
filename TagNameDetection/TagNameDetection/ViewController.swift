@@ -10,46 +10,32 @@ import UIKit
 
 
 class ViewController: UIViewController {
-    @IBOutlet weak var txtMain: DPTagTextView!
+    @IBOutlet weak var tagTextView: DPTagTextView!
     @IBOutlet weak var tbl: UITableView!
-    @IBOutlet weak var lbl: UILabel!
     @IBOutlet weak var lblTagName: UILabel!
+    @IBOutlet weak var switchTagDetection: UISwitch!
     
     let isTagDetection = true
-    
-    var strSearch = String()
     let arrUsers : [String] = ["Datt Patel", "Dharmesh Shah","Arpit Dhamane","Nirzar Gandhi","Pooja Shah","Nilomi Shah","Pradip Rathod","Jiten Goswami"]
-    var arrRange : [Range<String.Index>] = []
-    var arrTagedUser : [String] = []
-    let tagPrefix = "@[---"
-    let tagPostfix = "---]"
+    let arrHashTag : [String] = ["random", "memes", "meme", "love", "photography", "art", "humor", "like", "follow", "funny", "photooftheday"]
     var arrSearchUsers = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        if (isTagDetection) {
-           
-            let str =  "Hello, All the Information about @[---Datt Patel---] is related to @[---Dharmesh Shah---] and @[---Arpit Dhamane---] which can be Defined by @[---Nirzar Gandhi---] and @[---Pooja Shah---] who are in company with @[---Nilomi Shah---] , @[---Pradip Rathod---] and @[---Jiten Goswami---] "
-            self.txtMain.setTagDetection(isTagDetection)
-            self.txtMain.arrSearchWith = ["@","#"]
-            arrTagedUser = arrUsers
-            self.txtMain.txtFont = UIFont(name: "HelveticaNeue", size: CGFloat(15))!
-            self.txtMain.tagFont = UIFont(name: "HelveticaNeue-Bold", size: CGFloat(17.0))!
-//            self.txtMain.tagPrefix = tagPrefix
-//            self.txtMain.tagPostfix = tagPostfix
-//            _ = self.txtMain.getAllTag(str)
-            var arrTags = [DPTag]()
-            for i in 0 ..< arrTagedUser.count {
-                arrTags.append(DPTag(strTagName: arrTagedUser[i], tagID: i))
-            }
-            self.txtMain.setTxtAndTag(str: str, tags: arrTags)
-//            self.txtMain.setTxt(str)
-        }
         
-//        txtMain.setDelegateToTextView() // If you don't want to use delegate in your class
-        self.txtMain.delegate = self // If you want to use delegate in your class, Then retrun txtMain.textView(textView, shouldChangeTextIn: range, replacementText: text) in shouldChangeTextIn delegate method.
-        self.txtMain.dpTagDelegate = self
+        if (isTagDetection) {
+            switchTagDetection.setOn(isTagDetection, animated: true)
+            tagTextView.setTagDetection(true)
+            
+            let tag1 = DPTag(name: "Lorem Ipsum", range: NSRange(location: 41, length: 11))
+            let tag2 = DPTag(id: "567681647", name: "suffered", range: NSRange(location: 86, length: 9), data: ["withHashTag" : "#suffered"], isHashTag: true,customTextAttributes: [NSAttributedString.Key.foregroundColor: UIColor.green,NSAttributedString.Key.backgroundColor: UIColor.black, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)])
+            let tag3 = DPTag(name: "humour", range: NSRange(location: 133, length: 7), isHashTag: true)
+            
+            tagTextView.setText("There are many variations of passages of Lorem Ipsum available, but the majority have #suffered alteration in some form, by injected #humour, or randomised words which don't look even slightly believable.", arrTags: [tag1, tag2, tag3])
+            
+        }
+
+        self.tagTextView.dpTagDelegate = self
         tbl.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tbl.isHidden = true
         // Do any additional setup after loading the view, typically from a nib.
@@ -62,50 +48,46 @@ class ViewController: UIViewController {
 
     
     @IBAction func tagDetectionSwitchAction(_ sender: UISwitch) {
-        txtMain.setTagDetection(sender.isOn)
+        tagTextView.setTagDetection(sender.isOn)
     }
     @IBAction func btnClearAction(_ sender: UIButton) {
-        clearTagTextView()
+        tagTextView.setText(nil, arrTags: [])
+        print(tagTextView.arrTags)
     }
     
-    private func clearTagTextView() {
-        arrTagedUser.removeAll()
-        txtMain.clearTextWithTag()
-    }
-}
-// MARK:- UITextViewDelegate
-extension ViewController : UITextViewDelegate {
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        return txtMain.textView(textView, shouldChangeTextIn: range, replacementText: text) // Required for functionality to work.
-    }
 }
 // MARK:- DPTagTextViewDelegate
 extension ViewController : DPTagTextViewDelegate {
-    func tagSearchString(_ str: String) {
-        if (str.count == 0) {
+    
+    func dpTagTextView(_ textView: DPTagTextView, didChangedTagSearchString strSearch: String, isHashTag: Bool) {
+        
+        if (strSearch.count == 0) {
             tbl.isHidden = true
         } else {
             tbl.isHidden = false
         }
-        print(str)
-        strSearch = str
-        arrSearchUsers = arrUsers.filter({ (str) -> Bool in
+        print(strSearch)
+        arrSearchUsers = (isHashTag ? arrHashTag : arrUsers).filter({ (str) -> Bool in
             return str.lowercased().contains(strSearch.lowercased())
         })
         tbl.reloadData()
+        
     }
     
-    func removeTag(at index: Int, tag: DPTag) {
-        arrTagedUser.remove(at: index)
+    func dpTagTextView(_ textView: DPTagTextView, didInsertTag tag: DPTag) {
+        
     }
     
-    func insertTag(at index: Int, tag: DPTag) {
-        arrTagedUser.insert(tag.strTagName, at: index)
+    func dpTagTextView(_ textView: DPTagTextView, didRemoveTag tag: DPTag) {
+        
     }
     
-    func detectTag(at index: Int, tag: DPTag) {
-        print(tag)
-        lblTagName.text = tag.strTagName
+    func dpTagTextView(_ textView: DPTagTextView, didSelectTag tag: DPTag) {
+        lblTagName.text = "\(tag.name) : \(tag.range) : \(tag.isHashTag ? tagTextView.hashTagSymbol : tagTextView.mentionSymbol)"
+    }
+    
+    func dpTagTextView(_ textView: DPTagTextView, didChangedTags arrTags: [DPTag]) {
+        
     }
     
 }
@@ -121,11 +103,10 @@ extension ViewController: UITableViewDelegate,UITableViewDataSource {
         cell.textLabel?.text = arrSearchUsers[indexPath.row]
         return cell
     }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        txtMain.insertTag(arrSearchUsers[indexPath.row], tagID: Int(Date().timeIntervalSince1970), strSearch: strSearch)
+        tagTextView.addTag(tagText: arrSearchUsers[indexPath.row])
         tbl.isHidden = true
-        strSearch = ""
-        
     }
     
 }

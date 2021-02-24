@@ -8,83 +8,138 @@
 
 import UIKit
 
-struct DPTag {
-    let strTagName : String
-    let tagID : Int
-    let data : [String:AnyObject]?
+// MARK: - DPTag
+public struct DPTag {
+    public var id : String = UUID().uuidString
+    public var name : String
+    public var range: NSRange
+    public var data : [String:Any] = [:]
+    public var isHashTag: Bool = false
+    public var customTextAttributes: [NSAttributedString.Key: Any]? = nil
+}
+
+// MARK: - DPTagTextViewDelegate
+public protocol DPTagTextViewDelegate {
+    func dpTagTextView(_ textView: DPTagTextView, didChangedTagSearchString strSearch: String, isHashTag: Bool)
+    func dpTagTextView(_ textView: DPTagTextView, didInsertTag tag: DPTag)
+    func dpTagTextView(_ textView: DPTagTextView, didRemoveTag tag: DPTag)
+    func dpTagTextView(_ textView: DPTagTextView, didSelectTag tag: DPTag)
+    func dpTagTextView(_ textView: DPTagTextView, didChangedTags arrTags: [DPTag])
+
+    func textViewShouldBeginEditing(_ textView: DPTagTextView) -> Bool
+    func textViewShouldEndEditing(_ textView: DPTagTextView) -> Bool
+    func textViewDidBeginEditing(_ textView: DPTagTextView)
+    func textViewDidEndEditing(_ textView: DPTagTextView)
+    func textView(_ textView: DPTagTextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool
+    func textViewDidChange(_ textView: DPTagTextView)
+    func textViewDidChangeSelection(_ textView: DPTagTextView)
+    func textView(_ textView: DPTagTextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool
+    func textView(_ textView: DPTagTextView, shouldInteractWith textAttachment: NSTextAttachment, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool
+}
+
+extension DPTagTextViewDelegate {
+    func dpTagTextView(_ textView: DPTagTextView, didChangedTagSearchString strSearch: String, isHashTag: Bool) {}
+    func dpTagTextView(_ textView: DPTagTextView, didInsertTag tag: DPTag) {}
+    func dpTagTextView(_ textView: DPTagTextView, didRemoveTag tag: DPTag) {}
+    func dpTagTextView(_ textView: DPTagTextView, didSelectTag tag: DPTag) {}
+    func dpTagTextView(_ textView: DPTagTextView, didChangedTags arrTags: [DPTag]) {}
     
-    init(strTagName: String , tagID: Int , data: [String:AnyObject] = [:]) {
-        self.strTagName = strTagName
-        self.tagID = tagID
-        self.data = data
+    func textViewShouldBeginEditing(_ textView: DPTagTextView) -> Bool { true }
+    func textViewShouldEndEditing(_ textView: DPTagTextView) -> Bool { true }
+    func textViewDidBeginEditing(_ textView: DPTagTextView) {}
+    func textViewDidEndEditing(_ textView: DPTagTextView) {}
+    func textView(_ textView: DPTagTextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool { true }
+    func textViewDidChange(_ textView: DPTagTextView) {}
+    func textViewDidChangeSelection(_ textView: DPTagTextView) {}
+    func textView(_ textView: DPTagTextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool { true }
+    func textView(_ textView: DPTagTextView, shouldInteractWith textAttachment: NSTextAttachment, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool { true }
+}
+
+
+open class DPTagTextView: UITextView {
+    
+    // MARK: - Properties
+    open var mentionSymbol: String = "@"
+    open var hashTagSymbol: String = "#"
+    open var textViewAttributes: [NSAttributedString.Key: Any] = {
+        [NSAttributedString.Key.foregroundColor: UIColor.black,
+         NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15)]
+    }()
+
+    open var mentionTagTextAttributes: [NSAttributedString.Key: Any] = {
+        [NSAttributedString.Key.foregroundColor: UIColor.blue,
+         NSAttributedString.Key.backgroundColor: UIColor.lightGray,
+         NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)]
+    }()
+    
+    open var hashTagTextAttributes: [NSAttributedString.Key: Any] = {
+        [NSAttributedString.Key.foregroundColor: UIColor.red,
+         NSAttributedString.Key.backgroundColor: UIColor.lightGray,
+         NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)]
+    }()
+    
+    public private(set) var arrTags : [DPTag] = []
+    open var dpTagDelegate : DPTagTextViewDelegate?
+    open var allowsHashTagUsingSpace : Bool = true
+    
+    private var currentTaggingRange: NSRange?
+    private var currentTaggingText: String? {
+        didSet {
+            if let tag = currentTaggingText, tag != oldValue {
+                dpTagDelegate?.dpTagTextView(self, didChangedTagSearchString:tag, isHashTag: isHashTag)
+            }
+        }
     }
-    
-}
-
-protocol DPTagTextViewDelegate {
-    func tagSearchString(_ strSearch : String)
-    func removeTag(at index : Int , tag : DPTag)
-    func insertTag(at index : Int , tag : DPTag)
-    func detectTag(at index : Int , tag : DPTag)
-}
-
-class DPTagTextView: UITextView , UITextViewDelegate {
-
-    private var arrRange : [Range<String.Index>] = []
-    private var arrTags : [DPTag] = [DPTag]()
+    private var tagRegex: NSRegularExpression {
+        try! NSRegularExpression(pattern: "(\(mentionSymbol)|\(hashTagSymbol))([^\\s\\K]+)")
+    }
+    private var isHashTag = false
     private var tapGesture = UITapGestureRecognizer()
-    var dpTagDelegate : DPTagTextViewDelegate!
-    var arrSearchWith = ["@","#"]
-    var txtFont : UIFont = UIFont(name: "HelveticaNeue", size: CGFloat(15))!
-    var tagFont : UIFont = UIFont(name: "HelveticaNeue-Bold", size: CGFloat(17.0))!
-    private var hack_shouldIgnorePredictiveInput = false
-    private var predictiveTextWatcher = 0
     
-    @IBInspectable public var tagPrefix: String = "@["
-    @IBInspectable public var tagPostfix: String = "]"
-    @IBInspectable public var txtColor : UIColor = .black
-    @IBInspectable public var tagTxtColor : UIColor = .black
-    @IBInspectable public var tagBackgroundColor : UIColor = .clear
     
-    required init?(coder: NSCoder) {
+    // MARK: - init
+    required public init?(coder: NSCoder) {
         super.init(coder: coder)
-        if #available(iOS 11.0, *) {
-            self.textDragInteraction?.isEnabled = false
+        setup()
+    }
+
+}
+
+// MARK: - Public methods
+public extension DPTagTextView {
+    
+    func addTag(allText: String? = nil, tagText: String, id: String = UUID().uuidString, data : [String:Any] = [:], customTextAttributes: [NSAttributedString.Key: Any]? = nil , isAppendSpace: Bool = true) {
+        guard let range = currentTaggingRange else { return }
+        guard let allText = (allText == nil ? text : allText) else { return }
+        
+        let origin = (allText as NSString).substring(with: range)
+        let tag = isHashTag ? hashTagSymbol.appending(tagText) : tagText
+        let replace = isAppendSpace ? tag.appending(" ") : tag
+        let changed = (allText as NSString).replacingCharacters(in: range, with: replace)
+        let tagRange = NSMakeRange(range.location, tag.utf16.count)
+        
+        let dpTag = DPTag(id: id, name: tagText, range: tagRange, data: data, isHashTag: isHashTag, customTextAttributes: customTextAttributes)
+        arrTags.append(dpTag)
+        for i in 0..<arrTags.count-1 {
+            var location = arrTags[i].range.location
+            let length = arrTags[i].range.length
+            if location > tagRange.location {
+                location += replace.count - origin.count
+                arrTags[i].range = NSMakeRange(location, length)
+            }
         }
+        
+        text = changed
+        updateAttributeText(selectedLocation: range.location+replace.count)
+        dpTagDelegate?.dpTagTextView(self, didInsertTag: dpTag)
+        dpTagDelegate?.dpTagTextView(self, didChangedTags: arrTags)
+        isHashTag = false
     }
     
-    func setDelegateToTextView() {
-        self.delegate = self
-    }
-    
-    func getAllTag(_ str:String) -> [DPTag] {
-        var arrTags = [DPTag]()
-        setAllTag(str,arrTags : &arrTags)
-        return arrTags
-    }
-    fileprivate func setAllTag(_ str:String , arrTags : inout [DPTag]) {
-        if let strTag = str.slice(from: tagPrefix, to: tagPostfix) {
-            arrTags.append(DPTag(strTagName: strTag, tagID: -1, data: [:]))
-            let strTemp = str.replacingOccurrences(of: "\(tagPrefix)\(strTag)\(tagPostfix)", with: strTag)
-            setAllTag(strTemp,arrTags : &arrTags)
-        }
-    }
-    
-    func setTxtAndTag(str:String , tags:[DPTag]) {
-        arrTags = tags
-        setTxt(str)
-    }
-    
-    func clearTextWithTag() {
-        self.text = ""
-        self.arrTags = []
-        self.arrRange = []
-    }
     func setTagDetection(_ isTagDetection : Bool, isEditable : Bool = false, isSelectable : Bool = false) {
         self.removeGestureRecognizer(tapGesture)
         if isTagDetection {
             tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapOnTextView(_:)))
-//            tapGesture.requiresExclusiveTouchType = false
             tapGesture.delegate = self
             self.addGestureRecognizer(tapGesture)
             self.isEditable = isEditable
@@ -94,309 +149,24 @@ class DPTagTextView: UITextView , UITextViewDelegate {
             self.isSelectable = true
         }
     }
-    func insertTag(_ strTag : String , tagID : Int , tagData : [String:AnyObject] = [:] , strSearch : String) {
-        var strTemp = text ?? ""
-        var insertIndex = -1
-        
-        for str in arrSearchWith {
-            if let range = strTemp.range(of: "\(str)\(strSearch)") {
-                strTemp = strTemp.replacingOccurrences(of: "\(str)\(strSearch)", with: "\(strTag) " , options: .literal, range: nil)
-                //                strTemp = "\(strTemp)\((arrUserListTag[indexPath.row].title)!) "
-                let r = range.lowerBound ..< "\(strTemp)\(strTemp)".utf16.index(range.lowerBound, offsetBy: (strTag.count))
-                
-                for i in 0 ..< arrRange.count {
-                    if (arrRange[i].upperBound.utf16Offset(in: strTemp) > r.upperBound.utf16Offset(in: strTemp) && insertIndex == -1) {
-                        arrRange.insert(r, at: i)
-                        arrTags.insert(DPTag(strTagName: strTag, tagID: tagID, data: tagData), at: i)
-                        insertIndex = i
-                    }
-                }
-                if (insertIndex == -1) {
-                    arrRange.append(r)
-                    arrTags.append(DPTag(strTagName: strTag, tagID: tagID, data: tagData))
-                } else {
-                    for i in insertIndex+1 ..< arrRange.count {
-                        arrRange[i] = "\(strTemp)\(strTemp)".utf16.index(arrRange[i].lowerBound, offsetBy: strTag.count - "\(str)\(strSearch)".count + 1) ..< "\(strTemp)\(strTemp)".utf16.index(arrRange[i].upperBound, offsetBy:strTag.count - "\(str)\(strSearch)".count + 1)
-                    }
-                }
-                
-                for rag in arrRange.reversed() {
-                    strTemp.insert(contentsOf: tagPostfix, at: rag.upperBound)
-                    strTemp.insert(contentsOf: tagPrefix, at: rag.lowerBound)
-                    //                    strTemp.insert("@", at: rag.lowerBound)
-                }
-                //            print(strTemp)
-                
-                setTxt(strTemp)
-                
-                if (insertIndex != -1) {
-                    self.selectedRange = NSMakeRange(arrRange[insertIndex].upperBound.utf16Offset(in: strTemp), 0)
-                    dpTagDelegate.insertTag(at: insertIndex, tag: DPTag(strTagName: strTag, tagID: tagID, data: tagData))
-                } else {
-                    dpTagDelegate.insertTag(at: arrTags.count - 1, tag: DPTag(strTagName: strTag, tagID: tagID, data: tagData))
-                }
-                break
-            }
-        }
-    }
-    func setTxt(_ str:String) {
-        arrRange = [Range<String.Index>]()
-        var strTemp = str
-        if arrTags.count == 0 { arrTags = getAllTag(str) }
-        for _ in arrTags {
-            if let strTag = strTemp.slice(from: tagPrefix, to: tagPostfix) {
-                for range in strTemp.ranges(of: "\(tagPrefix)\(strTag)\(tagPostfix)") {
-                    let rng = range.lowerBound ..< "\(strTemp)\(strTemp)".utf16.index(range.upperBound, offsetBy: -(tagPrefix.count + tagPostfix.count))
-                    //                strTemp.replaceSubrange(rng, with: i)
-                    strTemp = strTemp.replacingCharacters(in: range, with: strTag)
-                    arrRange.append(rng)
-                    break
-                }
-            }
-        }
-        
-        let formattedString = NSMutableAttributedString(string:strTemp)
-        formattedString.addAttributes([NSAttributedString.Key.font: txtFont , NSAttributedString.Key.foregroundColor : txtColor ] , range: NSRange(location:0,length:formattedString.length))
-        for range in arrRange {
-            formattedString.addAttributes([NSAttributedString.Key.font : tagFont , NSAttributedString.Key.backgroundColor : tagBackgroundColor, NSAttributedString.Key.foregroundColor : tagTxtColor] , range: NSRange(location:range.lowerBound.utf16Offset(in: strTemp),length:range.upperBound.utf16Offset(in: strTemp)-range.lowerBound.utf16Offset(in: strTemp)))
-        }
-        
-        self.attributedText = formattedString
-        
-        //        self.txtMain.text = strTemp
-    }
     
-    fileprivate func dpTagTextView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if predictiveTextWatcher == 1 {
-            predictiveTextWatcher = 0
-            return false
-        }
-        if hack_shouldIgnorePredictiveInput {
-             predictiveTextWatcher += 1
-            hack_shouldIgnorePredictiveInput = false
-            return false
-        }
-        hack_shouldIgnorePredictiveInput = true
-        // for Search
-        //        self.tbl.isHidden = true
-        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
-        
-        func search(with str : String) {
-            //            if let range = newText.range(of: "@") {
-            var rangSearch = newText.startIndex ..< newText.endIndex
-            var isIN = false
-            for rang in newText.ranges(of: str) {
-                if (rang.lowerBound.utf16Offset(in: newText) < range.lowerBound) {
-                    func searchRang() {
-                        var i = 0
-                        if (text.utf16Count == 0) {
-                            i = -range.length
-//                            rangSearch = /*"\(newText)\(newText)".utf16.index(rang.upperBound, offsetBy:  i + 1)*/rang.upperBound ..< "\(newText)\(newText)".utf16.index(rang.lowerBound, offsetBy:  range.upperBound + i - rang.lowerBound.encodedOffset)
-                        } else {
-                             i = -range.length + text.utf16Count
-                        }
-                        rangSearch = rang.upperBound ..< "\(newText)\(newText)".utf16.index(rang.lowerBound, offsetBy:  range.upperBound + i - rang.lowerBound.utf16Offset(in: newText))
-                        isIN = true
-                    }
-                    if (arrRange.count > 0) {
-                        var isGo = true
-                        for r in arrRange {
-                            if (range.upperBound > r.upperBound.utf16Offset(in: newText) && rang.upperBound.utf16Offset(in: newText) < r.upperBound.utf16Offset(in: newText)) {
-                                isGo = false
-                            }
-                        }
-                        if (isGo) {
-                            searchRang()
-                        }
-                    } else {
-                        searchRang()
-                    }
-                }
-            }
-            if (isIN) {
-                let strSearch = String(newText[rangSearch])
-//                                print(strSearch)
-                if strSearch.utf16Count > 0 /*&& !(text.utf16Count == 0 && strSearch.utf16Count == 1)*/ {
-                    dpTagDelegate.tagSearchString(strSearch)
-                    //                    self.tbl.isHidden = false
-                    //                    self.predicate(forPrefix: strSearch)
-                    //                    return true
-                }
-                else {
-                    dpTagDelegate.tagSearchString("")
-                }
-            }
-            else {
-                dpTagDelegate.tagSearchString("")
-            }
-        }
-        
-        for str in arrSearchWith {
-            if newText.contains(str) {
-                search(with:str)
-            }
-        }
-        
-        
-        // for add and remove tag
-        var strTxtView = textView.text ?? ""
-        var selectedRange = range
-        var deletedRanges = [Int]()
-        var newString = NSString(string: textView.text ?? "").replacingCharacters(in: range, with: text)
-        var isFirst = false
-        for i in 0 ..< arrRange.count {
-            
-            func detectTag() -> Bool {
-                if (arrRange[i].lowerBound.utf16Offset(in: strTxtView)  < range.location  && arrRange[i].upperBound.utf16Offset(in: strTxtView) > range.location)  {
-                    //                print("name:-\(arrUsers[i])")
-                    deletedRanges.append(i)
-                    isFirst = true
-                    return true
-                }
-                return false
-            }
-            if ((range.location < arrRange[i].lowerBound.utf16Offset(in: strTxtView) || range.location < arrRange[i].upperBound.utf16Offset(in: strTxtView)) && (range.location + range.length > arrRange[i].lowerBound.utf16Offset(in: strTxtView) || range.location + range.length > arrRange[i].upperBound.utf16Offset(in: strTxtView))) {
-                if (!detectTag()) {
-                    deletedRanges.append(i)
-                    isFirst = false
-                }
-            } else {
-                _ = detectTag()
-            }
-            
-            if (text.utf16Count != 0) {
-                
-                //                for j in i ..< arrRange.count {
-                if (arrRange[i].lowerBound.utf16Offset(in: strTxtView) >= range.location +  range.length) {
-                    arrRange[i] = "\(newString)\(newString)".utf16.index(arrRange[i].lowerBound, offsetBy: text.utf16Count - range.length) ..< "\(newString)\(newString)".utf16.index(arrRange[i].upperBound, offsetBy:text.utf16Count - range.length)
-                }
-                //                }
-            } else {
-                if (arrRange[i].lowerBound.utf16Offset(in: strTxtView) >= range.location && deletedRanges.count == 0) {
-                    
-                    arrRange[i] = "\(strTxtView)\(strTxtView)".utf16.index(arrRange[i].lowerBound, offsetBy: -(range.length)) ..< "\(strTxtView)\(strTxtView)".utf16.index(arrRange[i].upperBound, offsetBy:-(range.length))
-                }
-            }
-        }
-        //
-        if (deletedRanges.count > 0) {
-            
-            if (deletedRanges.count == 1 && isFirst) {
-                let removedRange = arrRange[deletedRanges[0]]
-                dpTagDelegate.removeTag(at: deletedRanges[0], tag: arrTags[deletedRanges[0]])
-                arrRange.remove(at: deletedRanges[0])
-                arrTags.remove(at: deletedRanges[0])
-                
-                if (deletedRanges[0] < arrRange.count && text.utf16Count == 0) {
-                    for i in deletedRanges[0] ..< arrRange.count {
-                        arrRange[i] = "\(strTxtView)\(strTxtView)".utf16.index(arrRange[i].lowerBound, offsetBy: (removedRange.lowerBound.utf16Offset(in: strTxtView) - removedRange.upperBound.utf16Offset(in: strTxtView))) ..< "\(strTxtView)\(strTxtView)".utf16.index(arrRange[i].upperBound, offsetBy:(removedRange.lowerBound.utf16Offset(in: strTxtView) - removedRange.upperBound.utf16Offset(in: strTxtView)))
-                    }
-                }
-                if (text.utf16Count == 0){
-                    strTxtView.removeSubrange(removedRange)
-                    selectedRange.location = removedRange.lowerBound.utf16Offset(in: strTxtView)
-                    newString = strTxtView
-                }
-            } else {
-                for deletedRange in deletedRanges.reversed() {
-                    dpTagDelegate.removeTag(at: deletedRange, tag: arrTags[deletedRange])
-                    arrRange.remove(at: deletedRange)
-                    arrTags.remove(at: deletedRange)
-                }
-                if (deletedRanges[0] < arrRange.count && text.utf16Count == 0) {
-                    for i in deletedRanges[0] ..< arrRange.count {
-                        arrRange[i] = "\(strTxtView)\(strTxtView)".utf16.index(arrRange[i].lowerBound, offsetBy: -range.length) ..< "\(strTxtView)\(strTxtView)".utf16.index(arrRange[i].upperBound, offsetBy:-range.length)
-                    }
-                }
-            }
-        }
-        
-        for rag in arrRange.reversed() {
-            newString.insert(contentsOf: tagPostfix, at: rag.upperBound)
-            newString.insert(contentsOf: tagPrefix, at: rag.lowerBound)
-        }
+    func setText(_ text: String?, arrTags: [DPTag]) {
+        self.text = text
+        self.arrTags = arrTags
+        updateAttributeText(selectedLocation: -1)
+    }
+}
 
-        if (text.utf16Count != 0 ) {
-            selectedRange.location += text.utf16Count
-        }
-        
-        selectedRange.length = 0
-        self.isScrollEnabled = false;
-        setTxt(newString)
-        self.isScrollEnabled = true;
-        textView.selectedRange = selectedRange
-        
-        hack_shouldIgnorePredictiveInput = false
-        return false
+
+// MARK: - Private methods
+private extension DPTagTextView {
+    
+    func setup() {
+        delegate = self
     }
     
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-       return dpTagTextView(textView, shouldChangeTextIn: range, replacementText: text)
-    }
-    @objc private final func tapOnTextView(_ recognizer: UITapGestureRecognizer){
-        // for Lable
-        //        // only detect taps in attributed text
-        //        guard let attributedText = lbl.attributedText, gesture.state == .ended else {
-        //            return
-        //        }
-        //
-        //        // Configure NSTextContainer
-        //        let textContainer = NSTextContainer(size: lbl.bounds.size)
-        //        textContainer.lineFragmentPadding = 0.0
-        //        textContainer.lineBreakMode = lbl.lineBreakMode
-        //        textContainer.maximumNumberOfLines = lbl.numberOfLines
-        //
-        //        // Configure NSLayoutManager and add the text container
-        //        let layoutManager = NSLayoutManager()
-        //        layoutManager.addTextContainer(textContainer)
-        //
-        //        // Configure NSTextStorage and apply the layout manager
-        //        let textStorage = NSTextStorage(attributedString: attributedText)
-        //        textStorage.addAttribute(NSAttributedStringKey.font, value: lbl.font, range: NSMakeRange(0, attributedText.length))
-        //        textStorage.addLayoutManager(layoutManager)
-        //
-        //        // get the tapped character location
-        //        let locationOfTouchInLabel = gesture.location(in: gesture.view)
-        //
-        //        // account for text alignment and insets
-        //        let textBoundingBox = layoutManager.usedRect(for: textContainer)
-        //        var alignmentOffset: CGFloat!
-        //        switch lbl.textAlignment {
-        //        case .left, .natural, .justified:
-        //            alignmentOffset = 0.0
-        //        case .center:
-        //            alignmentOffset = 0.5
-        //        case .right:
-        //            alignmentOffset = 1.0
-        //        }
-        //        let xOffset = ((lbl.bounds.size.width - textBoundingBox.size.width) * alignmentOffset) - textBoundingBox.origin.x
-        //        let yOffset = ((lbl.bounds.size.height - textBoundingBox.size.height) * alignmentOffset) - textBoundingBox.origin.y
-        //        let locationOfTouchInTextContainer = CGPoint(x: locationOfTouchInLabel.x - xOffset, y: locationOfTouchInLabel.y - yOffset)
-        //
-        //        // figure out which character was tapped
-        //        let characterTapped = layoutManager.characterIndex(for: locationOfTouchInTextContainer, in: textContainer, fractionOfDistanceBetweenInsertionPoints: nil)
-        //
-        //        // figure out how many characters are in the string up to and including the line tapped
-        //        let lineTapped = Int(ceil(locationOfTouchInLabel.y / lbl.font.lineHeight)) - 1
-        //        let rightMostPointInLineTapped = CGPoint(x: lbl.bounds.size.width, y: lbl.font.lineHeight * CGFloat(lineTapped))
-        //        let charsInLineTapped = layoutManager.characterIndex(for: rightMostPointInLineTapped, in: textContainer, fractionOfDistanceBetweenInsertionPoints: nil)
-        //
-        //        // ignore taps past the end of the current line
-        //        if characterTapped < charsInLineTapped {
-        ////            onCharacterTapped?(self, characterTapped)
-        //
-        //
-        ////            print(lineTapped)
-        ////            print(rightMostPointInLineTapped)
-        //        }
-        //        print(characterTapped)
-        //        for i in 0 ..< arrRange.count {
-        //            if arrRange[i].lowerBound.encodedOffset <= characterTapped && arrRange[i].upperBound.encodedOffset > characterTapped {
-        //                            print("name:-\(arrUsers[i])")
-        //            }
-        //        }
-        
-        
+    @objc final func tapOnTextView(_ recognizer: UITapGestureRecognizer) {
+    
         guard let textView = recognizer.view as? UITextView else {
             return
         }
@@ -406,72 +176,200 @@ class DPTagTextView: UITextView , UITextViewDelegate {
         location.y -= textView.textContainerInset.top
         
         let charIndex = textView.layoutManager.characterIndex(for: location, in: textView.textContainer, fractionOfDistanceBetweenInsertionPoints: nil)
-        guard charIndex < textView.textStorage.length else {
+        guard charIndex < textView.textStorage.length - 1 else {
             return
         }
         
-//        print("index:-\(charIndex)")
-        
-        for i in 0 ..< arrRange.count {
-            if arrRange[i].lowerBound.utf16Offset(in: self.text) <= charIndex && arrRange[i].upperBound.utf16Offset(in: self.text) > charIndex {
-//                print("name:-\(arrTags[i])")
-                dpTagDelegate.detectTag(at: i, tag: arrTags[i])
+        for i in 0 ..< arrTags.count {
+            if arrTags[i].range.location <= charIndex && arrTags[i].range.location+arrTags[i].range.length > charIndex {
+                dpTagDelegate?.dpTagTextView(self, didSelectTag: arrTags[i])
             }
         }
     }
-    override func addGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) {
-        if (gestureRecognizer.isKind(of: UILongPressGestureRecognizer.self)) {
-            gestureRecognizer.isEnabled = false;
+    
+    func matchedData(taggingCharacters: [Character], selectedLocation: Int, taggingText: String) -> (NSRange?, String?) {
+        var matchedRange: NSRange?
+        var matchedString: String?
+        let tag = String(taggingCharacters.reversed())
+        let textRange = NSMakeRange(selectedLocation-tag.count, tag.count)
+        
+        guard tag == mentionSymbol || tag == hashTagSymbol  else {
+            let matched = tagRegex.matches(in: taggingText, options: .reportCompletion, range: textRange)
+            if matched.count > 0, let range = matched.last?.range {
+                matchedRange = range
+                matchedString = (taggingText as NSString).substring(with: range).replacingOccurrences(of: isHashTag ? hashTagSymbol : mentionSymbol, with: "")
+            }
+            return (matchedRange, matchedString)
         }
-        super.addGestureRecognizer(gestureRecognizer)
-        return
+        
+        matchedRange = nil//textRange
+        matchedString = nil//isHashTag ? hashTag : symbol
+        return (matchedRange, matchedString)
+    }
+    
+    func tagging(textView: UITextView) {
+        let selectedLocation = textView.selectedRange.location
+        let taggingText = (textView.text as NSString).substring(with: NSMakeRange(0, selectedLocation))
+        let space: Character = " "
+        let lineBrak: Character = "\n"
+        var tagable: Bool = false
+        var characters: [Character] = []
+        
+        for char in Array(taggingText).reversed() {
+            if char == mentionSymbol.first {
+                characters.append(char)
+                isHashTag = false
+                tagable = true
+                break
+            } else if char == hashTagSymbol.first {
+                characters.append(char)
+                isHashTag = true
+                tagable = true
+                break
+            }
+            else if char == space || char == lineBrak {
+                tagable = false
+                break
+            }
+            characters.append(char)
+        }
+        
+        guard tagable else {
+            currentTaggingRange = nil
+            currentTaggingText = nil
+            return
+        }
+        
+        let data = matchedData(taggingCharacters: characters, selectedLocation: selectedLocation, taggingText: taggingText)
+        currentTaggingRange = data.0
+        currentTaggingText = data.1
+    }
+    
+    func updateAttributeText(selectedLocation: Int) {
+        let attributedString = NSMutableAttributedString(string: text)
+        attributedString.addAttributes(textViewAttributes, range: NSMakeRange(0, text.utf16.count))
+        arrTags.forEach { (dpTag) in
+            guard let customTextAttributes = dpTag.customTextAttributes else {
+            attributedString.addAttributes(dpTag.isHashTag ? hashTagTextAttributes : mentionTagTextAttributes, range: dpTag.range)
+                return
+            }
+            attributedString.addAttributes(customTextAttributes, range: dpTag.range)
+        }
+        
+        attributedText = attributedString
+        if selectedLocation > 0 { selectedRange = NSMakeRange(selectedLocation, 0) }
+    }
+    
+    func updateArrTags(range: NSRange, textCount: Int) {
+        arrTags = arrTags.filter({ (dpTag) -> Bool in
+            if dpTag.range.location < range.location && range.location < dpTag.range.location+dpTag.range.length {
+                dpTagDelegate?.dpTagTextView(self, didRemoveTag: dpTag)
+                return false
+            }
+            if range.length > 0 {
+                if range.location <= dpTag.range.location && dpTag.range.location < range.location+range.length {
+                    dpTagDelegate?.dpTagTextView(self, didRemoveTag: dpTag)
+                    return false
+                }
+            }
+            return true
+        })
+        
+        for i in 0 ..< arrTags.count {
+            var location = arrTags[i].range.location
+            let length = arrTags[i].range.length
+            if location >= range.location {
+                if range.length > 0 {
+                    if textCount > 1 {
+                        location += textCount - range.length
+                    } else {
+                        location -= range.length
+                    }
+                } else {
+                    location += textCount
+                }
+                arrTags[i].range = NSMakeRange(location, length)
+            }
+        }
+        
+        currentTaggingText = nil
+        dpTagDelegate?.dpTagTextView(self, didChangedTags: arrTags)
+    }
+    
+    func addHashTagWithSpace(_ replacementText: String, _ range: NSRange) {
+        if isHashTag && replacementText == " " && allowsHashTagUsingSpace {
+            let selectedLocation = selectedRange.location
+            let newText = (text as NSString).replacingCharacters(in: range, with: replacementText)
+            let taggingText = (newText as NSString).substring(with: NSMakeRange(0, selectedLocation + 1))
+            if let tag = taggingText.sliceMultipleTimes(from: "#", to: " ").last {
+                addTag(allText: newText, tagText: tag, isAppendSpace: false)
+            }
+        }
     }
     
 }
-extension DPTagTextView : UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
 
+// MARK: - UITextViewDelegate
+extension DPTagTextView: UITextViewDelegate {
+    
+    public func textViewDidChange(_ textView: UITextView) {
+        tagging(textView: textView)
+        updateAttributeText(selectedLocation: textView.selectedRange.location)
+        dpTagDelegate?.textViewDidChange(self)
+    }
+    
+    public func textViewDidChangeSelection(_ textView: UITextView) {
+        tagging(textView: textView)
+        dpTagDelegate?.textViewDidChangeSelection(self)
+    }
+    
+    public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        addHashTagWithSpace(text, range)
+        updateArrTags(range: range, textCount: text.utf16.count)
+        return dpTagDelegate?.textView(self, shouldChangeTextIn: range, replacementText: text) ?? true
+    }
+    
+    public func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        dpTagDelegate?.textViewShouldBeginEditing(self) ?? true
+    }
+    
+    public func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+        dpTagDelegate?.textViewShouldEndEditing(self) ?? true
+    }
+    
+    public func textViewDidBeginEditing(_ textView: UITextView) {
+        dpTagDelegate?.textViewDidBeginEditing(self)
+    }
+    
+    public func textViewDidEndEditing(_ textView: UITextView) {
+        dpTagDelegate?.textViewDidEndEditing(self)
+    }
+    
+    public func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        dpTagDelegate?.textView(self, shouldInteractWith: URL, in: characterRange, interaction: interaction) ?? true
+    }
+    
+    public func textView(_ textView: UITextView, shouldInteractWith textAttachment: NSTextAttachment, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        dpTagDelegate?.textView(self, shouldInteractWith: textAttachment, in: characterRange, interaction: interaction) ?? true
+    }
+    
+}
+
+// MARK: - UIGestureRecognizerDelegate
+extension DPTagTextView : UIGestureRecognizerDelegate {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
 }
-extension String {
-    var utf16Count : Int {
-        return utf16.count
-    }
-}
-extension String {
-    func slice(from: String, to: String) -> String? {
-        return (range(of: from)?.upperBound).flatMap { substringFrom in
-            (range(of: to, range: substringFrom..<endIndex)?.lowerBound).map { substringTo in
-                String(self[substringFrom..<substringTo])
+
+// MARK: - String extension
+internal extension String {
+    func sliceMultipleTimes(from: String, to: String) -> [String] {
+        components(separatedBy: from).dropFirst().compactMap { sub in
+            (sub.range(of: to)?.lowerBound).flatMap { endRange in
+                String(sub[sub.startIndex ..< endRange])
             }
         }
-    }
-}
-extension StringProtocol where Index == String.Index {
-    func index<T: StringProtocol>(of string: T, options: String.CompareOptions = []) -> Index? {
-        return range(of: string, options: options)?.lowerBound
-    }
-    func endIndex<T: StringProtocol>(of string: T, options: String.CompareOptions = []) -> Index? {
-        return range(of: string, options: options)?.upperBound
-    }
-    func indexes<T: StringProtocol>(of string: T, options: String.CompareOptions = []) -> [Index] {
-        var result: [Index] = []
-        var start = startIndex
-        while start < endIndex, let range = range(of: string, options: options, range: start..<endIndex) {
-            result.append(range.lowerBound)
-            start = range.lowerBound < range.upperBound ? range.upperBound : index(range.lowerBound, offsetBy: 1, limitedBy: endIndex) ?? endIndex
-        }
-        return result
-    }
-    func ranges<T: StringProtocol>(of string: T, options: String.CompareOptions = []) -> [Range<Index>] {
-        var result: [Range<Index>] = []
-        var start = startIndex
-        while start < endIndex, let range = range(of: string, options: options, range: start..<endIndex) {
-            result.append(range)
-            start = range.lowerBound < range.upperBound  ? range.upperBound : index(range.lowerBound, offsetBy: 1, limitedBy: endIndex) ?? endIndex
-        }
-        return result
     }
 }
 
