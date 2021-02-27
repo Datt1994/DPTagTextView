@@ -17,7 +17,7 @@ class ViewController: UIViewController {
     
     let isTagDetection = true
     let arrUsers : [String] = ["Datt Patel", "Dharmesh Shah","Arpit Dhamane","Nirzar Gandhi","Pooja Shah","Nilomi Shah","Pradip Rathod","Jiten Goswami"]
-    let arrHashTag : [String] = ["random", "memes", "meme", "love", "photography", "art", "humor", "like", "follow", "funny", "photooftheday"]
+    let arrHashTag : [String] = ["random", "memes", "meme", "love", "photography", "art", "humor", "like", "follow", "funny", "photooftheday", "awesome"]
     var arrSearchUsers = [String]()
     
     override func viewDidLoad() {
@@ -38,14 +38,7 @@ class ViewController: UIViewController {
         self.tagTextView.dpTagDelegate = self
         tbl.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tbl.isHidden = true
-        // Do any additional setup after loading the view, typically from a nib.
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     
     @IBAction func tagDetectionSwitchAction(_ sender: UISwitch) {
         tagTextView.setTagDetection(sender.isOn)

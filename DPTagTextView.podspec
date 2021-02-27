@@ -15,9 +15,9 @@ Pod::Spec.new do |s|
   #  summary should be tweet-length, and the description more in depth.
   #
 
-  s.name         = "DPTagDetectionTextView"
-  s.version      = "1.5.4"
-  s.summary      = "Tag detection and tag search for Textview."
+  s.name         = "DPTagTextView"
+  s.version      = "2.5.0"
+  s.summary      = "Add & detect Tag/mention and tag search for Textview."
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
@@ -27,7 +27,7 @@ Pod::Spec.new do |s|
   # s.description  = <<-DESC
   #                  DESC
 
-  s.homepage     = "https://github.com/Datt1994/DPTagDetectionTextView"
+  s.homepage     = "https://github.com/Datt1994/DPTagTextView"
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
@@ -52,7 +52,7 @@ Pod::Spec.new do |s|
   #  profile URL.
   #
 
-  s.author             = { "Datt1994" => "email@address.com" }
+  s.author             = { "Datt1994" => "Datt1994@gmail.com" }
   # Or just: s.author    = "Datt1994"
   # s.authors            = { "Datt1994" => "email@address.com" }
   # s.social_media_url   = "http://twitter.com/Datt1994"
@@ -79,7 +79,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/Datt1994/DPTagDetectionTextView.git", :tag => s.version }
+  s.source       = { :git => "https://github.com/Datt1994/DPTagTextView.git", :tag => s.version }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -90,7 +90,7 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files = 'TagNameDetection/TagNameDetection/DPTagTextView/DPTagTextView.swift'
+  s.source_files = 'DPTagTextView/DPTagTextView/DPTagTextView/DPTagTextView.swift'
   # s.exclude_files = "Classes/Exclude"
 
   # s.public_header_files = "Classes/**/*.h"

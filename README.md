@@ -1,4 +1,9 @@
-# DPTagDetectionTextView
+# DPTagTextView
+[![Platform](https://img.shields.io/cocoapods/p/DPTagTextView.svg?style=flat)](http://cocoapods.org/pods/DPTagTextView)
+[![Language: Swift 5](https://img.shields.io/badge/language-swift5-f48041.svg?style=flat)](https://developer.apple.com/swift)
+[![License](https://img.shields.io/cocoapods/l/DPOTPView.svg?style=flat)](https://github.com/Datt1994/DPTagTextView/blob/master/LICENSE)
+[![Version](https://img.shields.io/cocoapods/v/DPTagTextView.svg?style=flat)](http://cocoapods.org/pods/DPTagTextView)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 Add & detect tag/mention using Textview.
 
@@ -21,11 +26,11 @@ To integrate DPTagDetectionTextView into your Xcode project using CocoaPods, spe
 
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '8.0'
+platform :ios, '10.0'
 
 target 'TargetName' do
 use_frameworks!
-pod 'DPTagDetectionTextView'
+pod 'DPTagTextView'
 end
 ```
 
@@ -34,6 +39,31 @@ Then, run the following command:
 ```bash
 $ pod install
 ```
+
+## Installation with Carthage
+
+[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks.
+
+You can install Carthage with [Homebrew](http://brew.sh/) using the following command:
+
+```bash
+$ brew update
+$ brew install carthage
+```
+
+To integrate `DPOTPView` into your Xcode project using Carthage, specify it in your `Cartfile`:
+
+```ogdl
+github "Datt1994/DPTagTextView"
+```
+
+Run `carthage` to build the framework and drag the framework (`DPTagTextView.framework`) into your Xcode project.
+
+## Installation with Swift Package Manager
+
+The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler.
+
+To add the library as package dependency to your Xcode project, select File > Swift Packages > Add Package Dependency and enter its repository URL `https://github.com/Datt1994/DPTagTextView.git`
 
 
 ## Add Manually 

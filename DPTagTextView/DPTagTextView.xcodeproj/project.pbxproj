@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C689FF4525EAF769002D9335 /* DPTagTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = C689FF4325EAF769002D9335 /* DPTagTextView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C689FF4825EAF769002D9335 /* DPTagTextView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C689FF4125EAF769002D9335 /* DPTagTextView.framework */; };
+		C689FF4925EAF769002D9335 /* DPTagTextView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C689FF4125EAF769002D9335 /* DPTagTextView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C689FF5125EAFAEE002D9335 /* DPTagTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6CDA76C20BD4E8100F91211 /* DPTagTextView.swift */; };
 		C6A605E22074A59F005E5F45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6A605E12074A59F005E5F45 /* AppDelegate.swift */; };
 		C6A605E42074A59F005E5F45 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6A605E32074A59F005E5F45 /* ViewController.swift */; };
 		C6A605E72074A59F005E5F45 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C6A605E52074A59F005E5F45 /* Main.storyboard */; };
@@ -15,8 +19,35 @@
 		C6CDA76D20BD4E8100F91211 /* DPTagTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6CDA76C20BD4E8100F91211 /* DPTagTextView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		C689FF4625EAF769002D9335 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C6A605D62074A59F005E5F45 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C689FF4025EAF769002D9335;
+			remoteInfo = DPTagTextView;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C689FF4A25EAF769002D9335 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C689FF4925EAF769002D9335 /* DPTagTextView.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		C6A605DE2074A59F005E5F45 /* TagNameDetection.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TagNameDetection.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C689FF4125EAF769002D9335 /* DPTagTextView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DPTagTextView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C689FF4325EAF769002D9335 /* DPTagTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DPTagTextView.h; sourceTree = "<group>"; };
+		C689FF4425EAF769002D9335 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C6A605DE2074A59F005E5F45 /* DPTagTextView-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DPTagTextView-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6A605E12074A59F005E5F45 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C6A605E32074A59F005E5F45 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		C6A605E62074A59F005E5F45 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -27,10 +58,18 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		C689FF3E25EAF769002D9335 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C6A605DB2074A59F005E5F45 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C689FF4825EAF769002D9335 /* DPTagTextView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,10 +84,20 @@
 			path = DPTagTextView;
 			sourceTree = "<group>";
 		};
+		C689FF4225EAF769002D9335 /* DPTagTextView */ = {
+			isa = PBXGroup;
+			children = (
+				C689FF4325EAF769002D9335 /* DPTagTextView.h */,
+				C689FF4425EAF769002D9335 /* Info.plist */,
+			);
+			path = DPTagTextView;
+			sourceTree = "<group>";
+		};
 		C6A605D52074A59F005E5F45 = {
 			isa = PBXGroup;
 			children = (
-				C6A605E02074A59F005E5F45 /* TagNameDetection */,
+				C6A605E02074A59F005E5F45 /* DPTagTextView */,
+				C689FF4225EAF769002D9335 /* DPTagTextView */,
 				C6A605DF2074A59F005E5F45 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -56,12 +105,13 @@
 		C6A605DF2074A59F005E5F45 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C6A605DE2074A59F005E5F45 /* TagNameDetection.app */,
+				C6A605DE2074A59F005E5F45 /* DPTagTextView-Example.app */,
+				C689FF4125EAF769002D9335 /* DPTagTextView.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C6A605E02074A59F005E5F45 /* TagNameDetection */ = {
+		C6A605E02074A59F005E5F45 /* DPTagTextView */ = {
 			isa = PBXGroup;
 			children = (
 				C65F46D7237030D100B8062F /* DPTagTextView */,
@@ -72,27 +122,58 @@
 				C6A605EA2074A59F005E5F45 /* LaunchScreen.storyboard */,
 				C6A605ED2074A59F005E5F45 /* Info.plist */,
 			);
-			path = TagNameDetection;
+			path = DPTagTextView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		C689FF3C25EAF769002D9335 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C689FF4525EAF769002D9335 /* DPTagTextView.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
-		C6A605DD2074A59F005E5F45 /* TagNameDetection */ = {
+		C689FF4025EAF769002D9335 /* DPTagTextView */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C6A605F02074A59F005E5F45 /* Build configuration list for PBXNativeTarget "TagNameDetection" */;
+			buildConfigurationList = C689FF4D25EAF769002D9335 /* Build configuration list for PBXNativeTarget "DPTagTextView" */;
 			buildPhases = (
-				C6A605DA2074A59F005E5F45 /* Sources */,
-				C6A605DB2074A59F005E5F45 /* Frameworks */,
-				C6A605DC2074A59F005E5F45 /* Resources */,
+				C689FF3C25EAF769002D9335 /* Headers */,
+				C689FF3D25EAF769002D9335 /* Sources */,
+				C689FF3E25EAF769002D9335 /* Frameworks */,
+				C689FF3F25EAF769002D9335 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = TagNameDetection;
+			name = DPTagTextView;
+			productName = DPTagTextView;
+			productReference = C689FF4125EAF769002D9335 /* DPTagTextView.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		C6A605DD2074A59F005E5F45 /* DPTagTextView-Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C6A605F02074A59F005E5F45 /* Build configuration list for PBXNativeTarget "DPTagTextView-Example" */;
+			buildPhases = (
+				C6A605DA2074A59F005E5F45 /* Sources */,
+				C6A605DB2074A59F005E5F45 /* Frameworks */,
+				C6A605DC2074A59F005E5F45 /* Resources */,
+				C689FF4A25EAF769002D9335 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C689FF4725EAF769002D9335 /* PBXTargetDependency */,
+			);
+			name = "DPTagTextView-Example";
 			productName = TagNameDetection;
-			productReference = C6A605DE2074A59F005E5F45 /* TagNameDetection.app */;
+			productReference = C6A605DE2074A59F005E5F45 /* DPTagTextView-Example.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -102,16 +183,20 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1220;
 				ORGANIZATIONNAME = Datt;
 				TargetAttributes = {
+					C689FF4025EAF769002D9335 = {
+						CreatedOnToolsVersion = 12.2;
+						ProvisioningStyle = Automatic;
+					};
 					C6A605DD2074A59F005E5F45 = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Manual;
 					};
 				};
 			};
-			buildConfigurationList = C6A605D92074A59F005E5F45 /* Build configuration list for PBXProject "TagNameDetection" */;
+			buildConfigurationList = C6A605D92074A59F005E5F45 /* Build configuration list for PBXProject "DPTagTextView" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -124,12 +209,20 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C6A605DD2074A59F005E5F45 /* TagNameDetection */,
+				C6A605DD2074A59F005E5F45 /* DPTagTextView-Example */,
+				C689FF4025EAF769002D9335 /* DPTagTextView */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		C689FF3F25EAF769002D9335 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C6A605DC2074A59F005E5F45 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -143,6 +236,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		C689FF3D25EAF769002D9335 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C689FF5125EAFAEE002D9335 /* DPTagTextView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C6A605DA2074A59F005E5F45 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -154,6 +255,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C689FF4725EAF769002D9335 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C689FF4025EAF769002D9335 /* DPTagTextView */;
+			targetProxy = C689FF4625EAF769002D9335 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		C6A605E52074A59F005E5F45 /* Main.storyboard */ = {
@@ -175,6 +284,65 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		C689FF4B25EAF769002D9335 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = DPTagTextView/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 2.5.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Datt.DPTagTextView;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		C689FF4C25EAF769002D9335 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = DPTagTextView/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 2.5.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Datt.DPTagTextView;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		C6A605EE2074A59F005E5F45 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -200,6 +368,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -225,7 +394,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -259,6 +428,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -278,7 +448,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -289,13 +459,14 @@
 		C6A605F12074A59F005E5F45 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = 3Y587YMRM5;
-				INFOPLIST_FILE = TagNameDetection/Info.plist;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = DPTagTextView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Datt.TagNameDetection;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Datt.DPTagTextView-example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -306,13 +477,14 @@
 		C6A605F22074A59F005E5F45 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = 3Y587YMRM5;
-				INFOPLIST_FILE = TagNameDetection/Info.plist;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = DPTagTextView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Datt.TagNameDetection;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Datt.DPTagTextView-example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -323,7 +495,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C6A605D92074A59F005E5F45 /* Build configuration list for PBXProject "TagNameDetection" */ = {
+		C689FF4D25EAF769002D9335 /* Build configuration list for PBXNativeTarget "DPTagTextView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C689FF4B25EAF769002D9335 /* Debug */,
+				C689FF4C25EAF769002D9335 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C6A605D92074A59F005E5F45 /* Build configuration list for PBXProject "DPTagTextView" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C6A605EE2074A59F005E5F45 /* Debug */,
@@ -332,7 +513,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C6A605F02074A59F005E5F45 /* Build configuration list for PBXNativeTarget "TagNameDetection" */ = {
+		C6A605F02074A59F005E5F45 /* Build configuration list for PBXNativeTarget "DPTagTextView-Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C6A605F12074A59F005E5F45 /* Debug */,
