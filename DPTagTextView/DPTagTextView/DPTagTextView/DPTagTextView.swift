@@ -37,7 +37,7 @@ public protocol DPTagTextViewDelegate {
     func textView(_ textView: DPTagTextView, shouldInteractWith textAttachment: NSTextAttachment, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool
 }
 
-extension DPTagTextViewDelegate {
+public extension DPTagTextViewDelegate {
     func dpTagTextView(_ textView: DPTagTextView, didChangedTagSearchString strSearch: String, isHashTag: Bool) {}
     func dpTagTextView(_ textView: DPTagTextView, didInsertTag tag: DPTag) {}
     func dpTagTextView(_ textView: DPTagTextView, didRemoveTag tag: DPTag) {}
