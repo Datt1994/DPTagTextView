@@ -1,6 +1,12 @@
 # DPTagDetectionTextView
 
-Tag detection from Textview.
+Add & detect tag/mention using Textview.
+
+<img src="https://user-images.githubusercontent.com/19645535/109400852-14133300-7971-11eb-9301-6d8321fbf5b3.mp4" srcold="https://user-images.githubusercontent.com/19645535/109400040-5f771280-796c-11eb-86a4-6a5f12ee13c7.mp4" width="400" />
+
+
+
+
 
 ## Installation with CocoaPods
 
