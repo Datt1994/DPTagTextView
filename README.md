@@ -50,7 +50,7 @@ $ brew update
 $ brew install carthage
 ```
 
-To integrate `DPOTPView` into your Xcode project using Carthage, specify it in your `Cartfile`:
+To integrate `DPTagTextView` into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
 github "Datt1994/DPTagTextView"
