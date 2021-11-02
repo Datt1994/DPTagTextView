@@ -21,7 +21,7 @@ $ gem install cocoapods
 ```
 #### Podfile
 
-To integrate DPTagDetectionTextView into your Xcode project using CocoaPods, specify it in your `Podfile`:
+To integrate `DPTagTextView` into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
