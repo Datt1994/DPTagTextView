@@ -246,6 +246,7 @@ private extension DPTagTextView {
     }
     
     func updateAttributeText(selectedLocation: Int) {
+        if text.isEmpty { arrTags.removeAll() }
         let attributedString = NSMutableAttributedString(string: text)
         attributedString.addAttributes(textViewAttributes, range: NSMakeRange(0, text.utf16.count))
         arrTags.forEach { (dpTag) in
@@ -307,6 +308,11 @@ private extension DPTagTextView {
         }
     }
     
+    /// This will remove all the previously cached tags. Always use this function to clear the textfields with actions
+    func clearText() {
+        self.text = ""
+        self.arrTags.removeAll()
+    }
 }
 
 // MARK: - UITextViewDelegate
